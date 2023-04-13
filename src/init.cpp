@@ -35,12 +35,10 @@
 
 /**
  * Display help message.
- *
- * @param  name - of application.
  */
-static void help(const char * const name)
+static void help(void)
 {
-    cout << "Usage: " << name << " [Options]" << endl;
+    cout << "Usage: " << PACKAGE_NAME << " [Options]" << endl;
     cout << "  Generates the bash script \"" << scriptFilename << "\" which draws a pack of playing cards."<< endl;
     cout << endl;
     cout << "  Options:" << endl;
@@ -81,12 +79,10 @@ static void help(const char * const name)
 
 /**
  * Display version message.
- *
- * @param  name - of application.
  */
-static void version(const char * const name)
+static void version(void)
 {
-    cout << "Version " VERSION " of " << name << endl;
+    cout << "Version " VERSION " of " << PACKAGE_NAME << endl;
     cout << "Feedback to: " PACKAGE_BUGREPORT << endl;
 }
 
@@ -194,20 +190,11 @@ static int parseCommandLine(int argc, char *argv[])
                 faceDirectory  = string(optarg);
                 break;
 
-            case 'v':
-                version(argv[0]);
+            case 'v':   version();  return 2;
 
-                return 2;
+            case 0:     help();     return 1;
 
-            case 0:
-                help(argv[0]);
-
-                return 1;
-
-            default:
-                help(argv[0]);
-
-                return -1;
+            default:    help();     return -1;
         }//end switch
     }//end while
 
