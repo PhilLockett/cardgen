@@ -536,9 +536,9 @@ int generateScript(int argc, char *argv[])
     }
 
 
-//- Add the Jokers using narrower boarders.
-    boarderX = 7;
-    boarderY = 5;
+//- Add the Jokers using narrower borders.
+    borderX = 7;
+    borderY = 5;
     indexInfo.setH(30.0);
     indexInfo.setY(20.0);
     recalculate();

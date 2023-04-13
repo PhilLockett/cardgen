@@ -67,8 +67,8 @@ static void help(const char * const name)
     cout << "\t--StandardPipHeight value \tHeight of standard pip as a % of card height (default: " << standardPipInfo.getH() << ")." << endl;
     cout << "\t--StandardPipCentreX value \tX value of centre of standard pip as a % of card width (default: " << standardPipInfo.getX() << ")." << endl;
     cout << "\t--StandardPipCentreY value \tY value of centre of standard pip as a % of card height (default: " << standardPipInfo.getY() << ")." << endl;
-    cout << "\t--ImageBoarderX value \t\tImage Boarder in X direction as a % of card width (default: " << boarderX << ")." << endl;
-    cout << "\t--ImageBoarderY value \t\tImage Boarder in Y direction as a % of card height (default: " << boarderY << ")." << endl;
+    cout << "\t--ImageBorderX value \t\tImage Boarder in X direction as a % of card width (default: " << borderX << ")." << endl;
+    cout << "\t--ImageBorderY value \t\tImage Boarder in Y direction as a % of card height (default: " << borderY << ")." << endl;
     cout << "\t--ImagePipOff \t\t\tDon't display image pip on the court cards." << endl;
     cout << "\t--ImagePipHeight value \t\tHeight of image pip as a % of card height (default: " << imagePipInfo.getH() << ")." << endl;
     cout << "\t--ImagePipCentreX value \tX value of centre of image pip as a % of card width relative to ImageBoarderX (default: " << imagePipInfo.getX() << ")." << endl;
@@ -132,8 +132,8 @@ static int parseCommandLine(int argc, char *argv[])
             {"StandardPipCentreX", required_argument,0,8},
             {"StandardPipCentreY", required_argument,0,9},
 
-            {"ImageBoarderX", required_argument,0,10},
-            {"ImageBoarderY", required_argument,0,11},
+            {"ImageBorderX", required_argument,0,10},
+            {"ImageBorderY", required_argument,0,11},
             {"ImagePipOff", no_argument,0,12},
             {"ImagePipHeight", required_argument,0,13},
             {"ImagePipCentreX", required_argument,0,14},
@@ -176,8 +176,8 @@ static int parseCommandLine(int argc, char *argv[])
             case 8:   standardPipInfo.setX(atof(optarg));   break;
             case 9:   standardPipInfo.setY(atof(optarg));   break;
 
-            case 10:  boarderX = atof(optarg);              break;
-            case 11:  boarderY = atof(optarg);              break;
+            case 10:  borderX = atof(optarg);               break;
+            case 11:  borderY = atof(optarg);               break;
             case 12:  imagePipInfo.setH(0);                 break;
             case 13:  imagePipInfo.setH(atof(optarg));      break;
             case 14:  imagePipInfo.setX(atof(optarg));      break;
@@ -233,15 +233,15 @@ void recalculate(void)
     winPY = (100.0F - (2.0F * standardPipInfo.getY()));
 
 //- Card face image values in pixels.
-    imageWidth  = 100 - (2 * boarderX);
-    imageHeight = 50 - boarderY;
+    imageWidth  = 100 - (2 * borderX);
+    imageHeight = 50 - borderY;
     widthPX     = ROUND(imageWidth * cardWidth / 100);
     heightPX    = ROUND(imageHeight * cardHeight / 100);
-    offsetX     = ROUND(boarderX * cardWidth / 100);
-    offsetY     = ROUND(boarderY * cardHeight / 100);
+    offsetX     = ROUND(borderX * cardWidth / 100);
+    offsetY     = ROUND(borderY * cardHeight / 100);
 
     imageX      = 50;
-    imageY      = boarderY + (imageHeight / 2);
+    imageY      = borderY + (imageHeight / 2);
 
 //- If "outputDirectory" isn't explicitly set, use "face".
     if (!outputDirectory.length())
@@ -282,8 +282,8 @@ static void dumpValues(void)
 	cout << "imageOffset\t" << imageOffset << endl;
 	cout << "imageOffsetWidth\t" << imageOffsetWidth << endl;
 	cout << "imageOffsetHeight\t" << imageOffsetHeight << endl;
-	cout << "boarderX\t" << boarderX << endl;
-	cout << "boarderY\t" << boarderY << endl;
+	cout << "borderX\t" << borderX << endl;
+	cout << "borderY\t" << borderY << endl;
 	cout << "imageWidth\t" << imageWidth << endl;
 	cout << "imageHeight\t" << imageHeight << endl;
 	cout << "widthPX\t\t" << widthPX << endl;

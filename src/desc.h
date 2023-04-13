@@ -48,8 +48,8 @@ private:
     bool ChangedY;
 
 public:
-    info(float h, float x, float y) : H(h), X(x), Y(y), ChangedH(false), ChangedX(false), ChangedY(false) {}
-    info(const info & a) : H(a.H), X(a.X), Y(a.Y), ChangedH(false), ChangedX(false), ChangedY(false) {}
+    info(float h, float x, float y) : H(h), X(x), Y(y), ChangedH{}, ChangedX{}, ChangedY{} {}
+    info(const info & a) : H(a.H), X(a.X), Y(a.Y), ChangedH{}, ChangedX{}, ChangedY{} {}
 
     float getH(void) { return H; }
     float getX(void) { return X; }
