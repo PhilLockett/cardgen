@@ -51,8 +51,8 @@ static void help(void)
     cout << endl;
     cout << "\t-s --script filename \t\tScript filename (default: \"" << scriptFilename << "\")." << endl;
     cout << "\t-o --output directory \t\tOutput filename (default: same directory name as face)." << endl;
-    cout << "\t-w --width integer \t\tCard width in pixels (default: " << cardWidth << ")." << endl;
-    cout << "\t-h --height integer \t\tCard height in pixels (default: " << cardHeight << ")." << endl;
+    cout << "\t-w --width integer \t\tCard width in pixels (default: " << cardWidthPx << ")." << endl;
+    cout << "\t-h --height integer \t\tCard height in pixels (default: " << cardHeightPx << ")." << endl;
     cout << "\t-c --colour name \t\tBackground colour name (defined at: http://www.imagemagick.org/script/color.php, default: \"" << cardColour << "\")." << endl;
     cout << "\t-a --KeepAspectRatio \t\tKeep image Aspect Ratio (default: " << (keepAspectRatio ? "true" : "false") << ")." << endl;
     cout << "\t-m --MPC \t\t\tGenerate MakePlayingCards image (default: " << (mpc ? "true" : "false") << ", see: https://www.makeplayingcards.com/)." << endl;
@@ -66,8 +66,8 @@ static void help(void)
     cout << "\t--StandardPipHeight value \tHeight of standard pip as a % of card height (default: " << standardPipInfo.getH() << ")." << endl;
     cout << "\t--StandardPipCentreX value \tX value of centre of standard pip as a % of card width (default: " << standardPipInfo.getX() << ")." << endl;
     cout << "\t--StandardPipCentreY value \tY value of centre of standard pip as a % of card height (default: " << standardPipInfo.getY() << ")." << endl;
-    cout << "\t--ImageBorderX value \t\tImage Border in X direction as a % of card width (default: " << borderX << ")." << endl;
-    cout << "\t--ImageBorderY value \t\tImage Border in Y direction as a % of card height (default: " << borderY << ")." << endl;
+    cout << "\t--ImageBorderX value \t\tImage Border in X direction as a % of card width (default: " << imageBorderX << ")." << endl;
+    cout << "\t--ImageBorderY value \t\tImage Border in Y direction as a % of card height (default: " << imageBorderY << ")." << endl;
     cout << "\t--ImagePipOff \t\t\tDon't display image pip on the court cards." << endl;
     cout << "\t--ImagePipHeight value \t\tHeight of image pip as a % of card height (default: " << imagePipInfo.getH() << ")." << endl;
     cout << "\t--ImagePipCentreX value \tX value of centre of image pip as a % of card width relative to ImageBorderX (default: " << imagePipInfo.getX() << ")." << endl;
@@ -149,8 +149,8 @@ static int parseCommandLine(int argc, char *argv[])
 
         switch (optchr)
         {
-            case 'w': cardWidth = atoi(optarg);             break;
-            case 'h': cardHeight = atoi(optarg);            break;
+            case 'w': cardWidthPx = atoi(optarg);             break;
+            case 'h': cardHeightPx = atoi(optarg);            break;
             case 'c': cardColour = string(optarg);          break;
 
             case 'i': indexDirectory = string(optarg);      break;
@@ -175,8 +175,8 @@ static int parseCommandLine(int argc, char *argv[])
             case 8:   standardPipInfo.setX(atof(optarg));   break;
             case 9:   standardPipInfo.setY(atof(optarg));   break;
 
-            case 10:  borderX = atof(optarg);               break;
-            case 11:  borderY = atof(optarg);               break;
+            case 10:  imageBorderX = atof(optarg);               break;
+            case 11:  imageBorderY = atof(optarg);               break;
             case 12:  imagePipInfo.setH(0);                 break;
             case 13:  imagePipInfo.setH(atof(optarg));      break;
             case 14:  imagePipInfo.setX(atof(optarg));      break;
@@ -214,33 +214,33 @@ void recalculate(void)
 //- Set up for Make Playing Cards output requirements.
     if (mpc)
     {
-        cardWidth  = mpcWidth;// + (2 * mpcBorder);
-        cardHeight = mpcHeight;// + (2 * mpcBorder);
-        cardBorder = mpcBorder;
+        cardWidthPx  = mpcWidth;
+        cardHeightPx = mpcHeight;
+        cardBorderPx = mpcBorder;
         cornerRadius = 0.0;
     }
 
 //- Card outline values in pixels.
-    radius = ROUND(cornerRadius * cardHeight / 100);
-    outlineWidth = cardWidth-borderOffset-1;
-    outlineHeight = cardHeight-borderOffset-1;
+    radius = ROUND(cornerRadius * cardHeightPx / 100);
+    outlineWidth = cardWidthPx-borderOffset-1;
+    outlineHeight = cardHeightPx-borderOffset-1;
 
 //- Calculate viewport window size as percentages of the card size. In this
 //  context the viewport is the area of the card not occupied by the standard
 //  pip borders.
-    winPX = (100.0F - (2.0F * standardPipInfo.getX()));
-    winPY = (100.0F - (2.0F * standardPipInfo.getY()));
+    viewportWindowX = (100.0F - (2.0F * standardPipInfo.getX()));
+    viewportWindowY = (100.0F - (2.0F * standardPipInfo.getY()));
 
 //- Card face image values in pixels.
-    imageWidth  = 100 - (2 * borderX);
-    imageHeight = 50 - borderY;
-    widthPX     = ROUND(imageWidth * cardWidth / 100);
-    heightPX    = ROUND(imageHeight * cardHeight / 100);
-    offsetX     = ROUND(borderX * cardWidth / 100);
-    offsetY     = ROUND(borderY * cardHeight / 100);
+    imageWidth  = 100 - (2 * imageBorderX);
+    imageHeight = 50 - imageBorderY;
+    widthPX     = ROUND(imageWidth * cardWidthPx / 100);
+    heightPX    = ROUND(imageHeight * cardHeightPx / 100);
+    offsetX     = ROUND(imageBorderX * cardWidthPx / 100);
+    offsetY     = ROUND(imageBorderY * cardHeightPx / 100);
 
     imageX      = 50;
-    imageY      = borderY + (imageHeight / 2);
+    imageY      = imageBorderY + (imageHeight / 2);
 
 //- If "outputDirectory" isn't explicitly set, use "face".
     if (!outputDirectory.length())

@@ -69,8 +69,8 @@ bool desc::isValidPNG(const char * const buffer)
 int desc::getImageSize(void)
 {
     FileFound = false;
-    WidthPX = 1;
-    HeightPX = 1;
+    imageWidthPx = 1;
+    imageHeightPx = 1;
     AspectRatio = 1;
 
 //- Open the binary file.
@@ -88,9 +88,9 @@ int desc::getImageSize(void)
     if ((file) && (isValidPNG(buffer)))
     {
         FileFound = true;
-        WidthPX = htonl(*(uint32_t *)(buffer+16));
-        HeightPX = htonl(*(uint32_t *)(buffer+20));
-        AspectRatio = float(WidthPX) / HeightPX;
+        imageWidthPx = htonl(*(uint32_t *)(buffer+16));
+        imageHeightPx = htonl(*(uint32_t *)(buffer+20));
+        AspectRatio = float(imageWidthPx) / imageHeightPx;
     }
 
     file.close();
@@ -106,7 +106,7 @@ int desc::getImageSize(void)
  */
  int desc::genDrawString(void)
 {
-    if ((Height == 0) || (Width == 0))
+    if ((portHeightPx == 0) || (portWidthPx == 0))
     {
         DrawString = "";	// Don't draw anything here.
 
@@ -114,7 +114,7 @@ int desc::getImageSize(void)
     }
 
     stringstream outputStream;
-    outputStream  << "\t-draw \"image over " << OriginX + cardBorder << ',' << OriginY + cardBorder << ' ' << ROUND(Width) << ',' << ROUND(Height) << " '" << FileName << "'\" \\" << endl;
+    outputStream  << "\t-draw \"image over " << portOriginXPx + cardBorderPx << ',' << portOriginYPx + cardBorderPx << ' ' << ROUND(portWidthPx) << ',' << ROUND(portHeightPx) << " '" << FileName << "'\" \\" << endl;
     DrawString = outputStream.str();
 
     return 0;
@@ -134,12 +134,12 @@ desc::desc(float H, float X, float Y, const string & fileName)
 : FileName(fileName), FileFound(false)
 {
     getImageSize();
-    Height  = H * cardHeight / 100;
-    Width   = Height * WidthPX / HeightPX;
-    CentreX = X * cardWidth / 100;
-    CentreY = Y * cardHeight / 100;
-    OriginX = ROUND(centre2OriginX(CentreX));
-    OriginY = ROUND(centre2OriginY(CentreY));
+    portHeightPx  = H * cardHeightPx / 100;
+    portWidthPx   = portHeightPx * imageWidthPx / imageHeightPx;
+    portCentreXPx = X * cardWidthPx / 100;
+    portCentreYPx = Y * cardHeightPx / 100;
+    portOriginXPx = ROUND(centre2OriginX(portCentreXPx));
+    portOriginYPx = ROUND(centre2OriginY(portCentreYPx));
     genDrawString();
 }
 
@@ -155,12 +155,12 @@ desc::desc(info & I, const string & fileName)
 : FileName(fileName), FileFound(false)
 {
     getImageSize();
-    Height  = I.getH() * cardHeight / 100;
-    Width   = Height * WidthPX / HeightPX;
-    CentreX = I.getX() * cardWidth / 100;
-    CentreY = I.getY() * cardHeight / 100;
-    OriginX = ROUND(centre2OriginX(CentreX));
-    OriginY = ROUND(centre2OriginY(CentreY));
+    portHeightPx  = I.getH() * cardHeightPx / 100;
+    portWidthPx   = portHeightPx * imageWidthPx / imageHeightPx;
+    portCentreXPx = I.getX() * cardWidthPx / 100;
+    portCentreYPx = I.getY() * cardHeightPx / 100;
+    portOriginXPx = ROUND(centre2OriginX(portCentreXPx));
+    portOriginYPx = ROUND(centre2OriginY(portCentreYPx));
     genDrawString();
 }
 
@@ -173,10 +173,10 @@ desc::desc(info & I, const string & fileName)
  */
 void desc::repos(float X, float Y)
 {
-    CentreX = X * cardWidth / 100;
-    CentreY = Y * cardHeight / 100;
-    OriginX = ROUND(centre2OriginX(CentreX));
-    OriginY = ROUND(centre2OriginY(CentreY));
+    portCentreXPx = X * cardWidthPx / 100;
+    portCentreYPx = Y * cardHeightPx / 100;
+    portOriginXPx = ROUND(centre2OriginX(portCentreXPx));
+    portOriginYPx = ROUND(centre2OriginY(portCentreYPx));
     genDrawString();
 }
 
@@ -190,8 +190,8 @@ void desc::setFileName(const string & fileName)
 {
     FileName = fileName;
     getImageSize();
-    Width   = Height * WidthPX / HeightPX;
-    OriginX = ROUND(centre2OriginX(CentreX));
+    portWidthPx   = portHeightPx * imageWidthPx / imageHeightPx;
+    portOriginXPx = ROUND(centre2OriginX(portCentreXPx));
     genDrawString();
 }
 

@@ -85,16 +85,16 @@ private:
 
     string DrawString;
     bool FileFound;
-    int WidthPX;
-    int HeightPX;
+    int imageWidthPx;
+    int imageHeightPx;
     float AspectRatio;
-    int OriginX;
-    int OriginY;
+    int portOriginXPx;
+    int portOriginYPx;
 
-    float CentreX;
-    float CentreY;
-    float Height;
-    float Width;
+    float portCentreXPx;
+    float portCentreYPx;
+    float portHeightPx;
+    float portWidthPx;
 
     string FileName;
 
@@ -105,24 +105,24 @@ public:
     void setFileName(const string & fileName);
     const string & getFileName(void) const { return FileName; }
 
-    float getCentreX(void) const { return CentreX; }
-    float getCentreY(void) const { return CentreY; }
-    float getHeight(void) const { return Height; }
-    float getWidth(void) const { return Width; }
+    float getPortCentreXPx(void) const { return portCentreXPx; }
+    float getPortCentreYPx(void) const { return portCentreYPx; }
+    float getPortHeightPx(void) const { return portHeightPx; }
+    float getPortWidthPx(void) const { return portWidthPx; }
 
-    int getHeightPX(void) const { return HeightPX; }
-    int getWidthPX(void) const { return WidthPX; }
+    int getImageHeightPx(void) const { return imageHeightPx; }
+    int getImageWidthPx(void) const { return imageWidthPx; }
     float getAspectRatio(void) const { return AspectRatio; }
-    int getOriginX(void) const { return OriginX; }
-    int getOriginY(void) const { return OriginY; }
+    int getPortOriginXPx(void) const { return portOriginXPx; }
+    int getPortOriginYPx(void) const { return portOriginYPx; }
     const string & draw(void) const { return DrawString; }
 
-    float centre2OriginX(float centre) const { return centre - (Width/2); }
-    float centre2OriginY(float centre) const { return centre - (Height/2); }
+    float centre2OriginX(float centre) const { return centre - (getPortWidthPx()/2); }
+    float centre2OriginY(float centre) const { return centre - (getPortHeightPx()/2); }
 
-    bool isLandscape(void) const { return HeightPX < WidthPX; }
+    bool isLandscape(void) const { return getImageHeightPx() < getImageWidthPx(); }
     bool isFileFound(void) const { return FileFound; }
-    bool useStandardPips(void) const { return !FileFound; }
+    bool useStandardPips(void) const { return !isFileFound(); }
 
 };
 

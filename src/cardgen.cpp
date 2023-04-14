@@ -32,9 +32,9 @@
  *
  */
 
-int cardWidth{380};
-int cardHeight{532};
-int cardBorder{};
+int cardWidthPx{380};
+int cardHeightPx{532};
+int cardBorderPx{};
 string cardColour{"white"};
 
 info indexInfo(10.5, 8.07, 9.84);
@@ -60,15 +60,15 @@ int borderOffset{1};
 int outlineWidth{};
 int outlineHeight{};
 
-float borderX{14.54};
-float borderY{10.14};
-float originalImageWidth{100 - (2 * borderX)};
-float originalImageHeight{50 - borderY};
-int originalWidthPX{ROUND(originalImageWidth * cardWidth / 100)};
-int originalHeightPX{ROUND(originalImageHeight * cardHeight / 100)};
+float imageBorderX{14.54};
+float imageBorderY{10.14};
+float originalImageWidth{100 - (2 * imageBorderX)};
+float originalImageHeight{50 - imageBorderY};
+int originalWidthPx{ROUND(originalImageWidth * cardWidthPx / 100)};
+int originalHeightPx{ROUND(originalImageHeight * cardHeightPx / 100)};
 
-float winPX{};
-float winPY{};
+float viewportWindowX{};
+float viewportWindowY{};
 
 float imageWidth{};
 float imageHeight{};

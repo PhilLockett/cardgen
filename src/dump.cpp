@@ -57,11 +57,11 @@ static const char* cardNames[]  = { "Joker", "Ace", "2", "3", "4", "5", "6", "7"
 static string genStartString(void)
 {
     stringstream outputStream;
-    outputStream  << "convert -size " << cardWidth + (2 * cardBorder) << "x" << cardHeight + (2 * cardBorder) << " xc:transparent  \\" << endl;
+    outputStream  << "convert -size " << cardWidthPx + (2 * cardBorderPx) << "x" << cardHeightPx + (2 * cardBorderPx) << " xc:transparent  \\" << endl;
 
     outputStream  << "\t-fill '" << cardColour << "' ";
     if (mpc)
-        outputStream  << "-draw 'rectangle " << borderOffset << ',' << borderOffset << ' ' << outlineWidth + (2 * cardBorder) << ',' << outlineHeight + (2 * cardBorder) << "'";
+        outputStream  << "-draw 'rectangle " << borderOffset << ',' << borderOffset << ' ' << outlineWidth + (2 * cardBorderPx) << ',' << outlineHeight + (2 * cardBorderPx) << "'";
     else
     if (radius)
         outputStream  << "-stroke black -strokewidth " << strokeWidth << " -draw 'roundRectangle " << borderOffset << ',' << borderOffset << ' ' << outlineWidth << ',' << outlineHeight << ' ' << radius << ',' << radius << "'";
@@ -158,8 +158,8 @@ static string drawStandardPips(bool rotate, int card, desc & pipD)
         const int index = patterns[card].locations[i];
         if (getRotate(index) == rotate)
         {
-            const float offX = standardPipInfo.getX() + (getXOffset(index) * winPX);
-            const float offY = standardPipInfo.getY() + (getYOffset(index) * winPY);
+            const float offX = standardPipInfo.getX() + (getXOffset(index) * viewportWindowX);
+            const float offY = standardPipInfo.getY() + (getYOffset(index) * viewportWindowY);
 
             pipD.repos(offX, offY);
             outputStream  << pipD.draw();
@@ -184,8 +184,8 @@ static string drawStandardPips(bool rotate, int card, desc & pipD)
 static string drawImage(const desc & faceD, const string & fileName)
 {
     stringstream outputStream{};
-    int x{offsetX + cardBorder};
-    int y{offsetY + cardBorder};
+    int x{offsetX + cardBorderPx};
+    int y{offsetY + cardBorderPx};
     int w{widthPX};
     int h{heightPX};
     float scale{1};
@@ -199,16 +199,16 @@ static string drawImage(const desc & faceD, const string & fileName)
             if (faceD.getAspectRatio() < aspectRatio)
             {
                 // Use heightPX to redefine view port size.
-                scale = (float)heightPX / faceD.getHeightPX();
-                w = ROUND(scale * faceD.getWidthPX()) + 1;
-                x = ((cardWidth - w)/2) + cardBorder;
+                scale = (float)heightPX / faceD.getImageHeightPx();
+                w = ROUND(scale * faceD.getImageWidthPx()) + 1;
+                x = ((cardWidthPx - w)/2) + cardBorderPx;
             }
             else
             {
                 // Use widthPX to redefine view port size.
-                scale = (float)widthPX / faceD.getWidthPX();
-                h = ROUND(scale * faceD.getHeightPX());
-                y = (cardHeight/2) - h + cardBorder;
+                scale = (float)widthPX / faceD.getImageWidthPx();
+                h = ROUND(scale * faceD.getImageHeightPx());
+                y = (cardHeightPx/2) - h + cardBorderPx;
             }
         }
     }
@@ -221,16 +221,16 @@ static string drawImage(const desc & faceD, const string & fileName)
             if (faceD.getAspectRatio() < aspectRatio)
             {
                 // Use 2*heightPX to redefine view port size.
-                scale = (float)(heightPX * 2) / faceD.getHeightPX();
-                w = ROUND(scale * faceD.getWidthPX());
-                x = ((cardWidth - w)/2) + cardBorder;
+                scale = (float)(heightPX * 2) / faceD.getImageHeightPx();
+                w = ROUND(scale * faceD.getImageWidthPx());
+                x = ((cardWidthPx - w)/2) + cardBorderPx;
             }
             else
             {
                 // Use widthPX to redefine view port size.
-                scale = (float)widthPX / faceD.getWidthPX();
-                h = ROUND(scale * faceD.getHeightPX());
-                y = ((cardHeight - h)/2) + cardBorder;
+                scale = (float)widthPX / faceD.getImageWidthPx();
+                h = ROUND(scale * faceD.getImageHeightPx());
+                y = ((cardHeightPx - h)/2) + cardBorderPx;
             }
         }
     }
@@ -273,10 +273,10 @@ static string drawImage(const desc & faceD, const string & fileName)
         desc pipD(scaledPip, fileName);
         if (pipD.isFileFound())
         {
-            const int x2{pipD.getOriginX()+x};
-            const int y2{pipD.getOriginY()+y};
-            const int w2{ROUND(pipD.getWidth())};
-            const int h2{ROUND(pipD.getHeight())};
+            const int x2{pipD.getPortOriginXPx()+x};
+            const int y2{pipD.getPortOriginYPx()+y};
+            const int w2{ROUND(pipD.getPortWidthPx())};
+            const int h2{ROUND(pipD.getPortHeightPx())};
             outputStream << "\t-draw \"image over " << x2 << ',' << y2 << ' ' << w2 << ',' << h2 << " '" << fileName << "'\" \\" << endl;
             outputStream << "\t-rotate 180 \\" << endl;
             outputStream << "\t-draw \"image over " << x2 << ',' << y2 << ' ' << w2 << ',' << h2 << " '" << fileName << "'\" \\" << endl;
@@ -550,8 +550,8 @@ int generateScript(int argc, char *argv[])
 
 
 //- Add the Jokers using narrower borders.
-    borderX = 7;
-    borderY = 5;
+    imageBorderX = 7;
+    imageBorderY = 5;
     indexInfo.setH(30.0);
     indexInfo.setY(20.0);
     recalculate();

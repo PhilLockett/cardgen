@@ -45,9 +45,9 @@ using namespace std;
  *
  */
 
-extern int cardWidth;
-extern int cardHeight;
-extern int cardBorder;
+extern int cardWidthPx;
+extern int cardHeightPx;
+extern int cardBorderPx;
 extern string cardColour;
 
 extern info indexInfo;
@@ -76,15 +76,15 @@ extern int borderOffset;
 extern int outlineWidth;
 extern int outlineHeight;
 
-extern float borderX;
-extern float borderY;
+extern float imageBorderX;
+extern float imageBorderY;
 extern float originalImageWidth;
 extern float originalImageHeight;
-extern int originalWidthPX;
-extern int originalHeightPX;
+extern int originalWidthPx;
+extern int originalHeightPx;
 
-extern float winPX;
-extern float winPY;
+extern float viewportWindowX;
+extern float viewportWindowY;
 
 extern float imageWidth;
 extern float imageHeight;
