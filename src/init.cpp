@@ -66,12 +66,12 @@ static void help(void)
     cout << "\t--StandardPipHeight value \tHeight of standard pip as a % of card height (default: " << standardPipInfo.getH() << ")." << endl;
     cout << "\t--StandardPipCentreX value \tX value of centre of standard pip as a % of card width (default: " << standardPipInfo.getX() << ")." << endl;
     cout << "\t--StandardPipCentreY value \tY value of centre of standard pip as a % of card height (default: " << standardPipInfo.getY() << ")." << endl;
-    cout << "\t--ImageBorderX value \t\tImage Boarder in X direction as a % of card width (default: " << borderX << ")." << endl;
-    cout << "\t--ImageBorderY value \t\tImage Boarder in Y direction as a % of card height (default: " << borderY << ")." << endl;
+    cout << "\t--ImageBorderX value \t\tImage Border in X direction as a % of card width (default: " << borderX << ")." << endl;
+    cout << "\t--ImageBorderY value \t\tImage Border in Y direction as a % of card height (default: " << borderY << ")." << endl;
     cout << "\t--ImagePipOff \t\t\tDon't display image pip on the court cards." << endl;
     cout << "\t--ImagePipHeight value \t\tHeight of image pip as a % of card height (default: " << imagePipInfo.getH() << ")." << endl;
-    cout << "\t--ImagePipCentreX value \tX value of centre of image pip as a % of card width relative to ImageBoarderX (default: " << imagePipInfo.getX() << ")." << endl;
-    cout << "\t--ImagePipCentreY value \tY value of centre of image pip as a % of card height relative to ImageBoarderY (default: " << imagePipInfo.getY() << ")." << endl;
+    cout << "\t--ImagePipCentreX value \tX value of centre of image pip as a % of card width relative to ImageBorderX (default: " << imagePipInfo.getX() << ")." << endl;
+    cout << "\t--ImagePipCentreY value \tY value of centre of image pip as a % of card height relative to ImageBorderY (default: " << imagePipInfo.getY() << ")." << endl;
     cout << endl;
     cout << "\t--CentreX value \t\tShortcut for: --IndexCentreX value --CornerPipCentreX value." << endl;
     cout << "\t--Inputs value \t\t\tShortcut for: -f value -p value -i value." << endl;
