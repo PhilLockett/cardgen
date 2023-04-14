@@ -114,7 +114,7 @@ int desc::getImageSize(void)
     }
 
     stringstream outputStream;
-    outputStream  << "\t-draw \"image over " << OriginX << ',' << OriginY << ' ' << ROUND(Width) << ',' << ROUND(Height) << " '" << FileName << "'\" \\" << endl;
+    outputStream  << "\t-draw \"image over " << OriginX + cardBorder << ',' << OriginY + cardBorder << ' ' << ROUND(Width) << ',' << ROUND(Height) << " '" << FileName << "'\" \\" << endl;
     DrawString = outputStream.str();
 
     return 0;

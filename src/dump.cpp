@@ -57,11 +57,17 @@ static const char* cardNames[]  = { "Joker", "Ace", "2", "3", "4", "5", "6", "7"
 static string genStartString(void)
 {
     stringstream outputStream;
-    outputStream  << "convert -size " << cardWidth << "x" << cardHeight << " xc:transparent  \\" << endl;
-    if (radius)
-        outputStream  << "\t-fill '" << cardColour << "' -stroke black -strokewidth " << strokeWidth << " -draw 'roundRectangle " << borderOffset << ',' << borderOffset << ' ' << outlineWidth << ',' << outlineHeight << ' ' << radius << ',' << radius << "' \\" << endl;
+    outputStream  << "convert -size " << cardWidth + (2 * cardBorder) << "x" << cardHeight + (2 * cardBorder) << " xc:transparent  \\" << endl;
+
+    outputStream  << "\t-fill '" << cardColour << "' ";
+    if (mpc)
+        outputStream  << "-draw 'rectangle " << borderOffset << ',' << borderOffset << ' ' << outlineWidth + (2 * cardBorder) << ',' << outlineHeight + (2 * cardBorder) << "'";
     else
-        outputStream  << "\t-fill '" << cardColour << "' -stroke black -strokewidth " << strokeWidth << " -draw 'rectangle " << borderOffset << ',' << borderOffset << ' ' << outlineWidth << ',' << outlineHeight << "' \\" << endl;
+    if (radius)
+        outputStream  << "-stroke black -strokewidth " << strokeWidth << " -draw 'roundRectangle " << borderOffset << ',' << borderOffset << ' ' << outlineWidth << ',' << outlineHeight << ' ' << radius << ',' << radius << "'";
+    else
+        outputStream  << "-stroke black -strokewidth " << strokeWidth << " -draw 'rectangle " << borderOffset << ',' << borderOffset << ' ' << outlineWidth << ',' << outlineHeight << "'";
+    outputStream  << " \\" << endl;
 
     return outputStream.str();
 }
@@ -177,13 +183,13 @@ static string drawStandardPips(bool rotate, int card, desc & pipD)
  */
 static string drawImage(const desc & faceD, const string & fileName)
 {
-    stringstream outputStream;
-    int x = offsetX;
-    int y = offsetY;
-    int w = widthPX;
-    int h = heightPX;
-    float scale = 1;
-    float aspectRatio = 0.0;
+    stringstream outputStream{};
+    int x{offsetX + cardBorder};
+    int y{offsetY + cardBorder};
+    int w{widthPX};
+    int h{heightPX};
+    float scale{1};
+    float aspectRatio{};
 
     if (faceD.isLandscape())
     {
@@ -195,14 +201,14 @@ static string drawImage(const desc & faceD, const string & fileName)
                 // Use heightPX to redefine view port size.
                 scale = (float)heightPX / faceD.getHeightPX();
                 w = ROUND(scale * faceD.getWidthPX()) + 1;
-                x = (cardWidth - w)/2;
+                x = ((cardWidth - w)/2) + cardBorder;
             }
             else
             {
                 // Use widthPX to redefine view port size.
                 scale = (float)widthPX / faceD.getWidthPX();
                 h = ROUND(scale * faceD.getHeightPX());
-                y = (cardHeight/2) - h;
+                y = (cardHeight/2) - h + cardBorder;
             }
         }
     }
@@ -217,14 +223,14 @@ static string drawImage(const desc & faceD, const string & fileName)
                 // Use 2*heightPX to redefine view port size.
                 scale = (float)(heightPX * 2) / faceD.getHeightPX();
                 w = ROUND(scale * faceD.getWidthPX());
-                x = (cardWidth - w)/2;
+                x = ((cardWidth - w)/2) + cardBorder;
             }
             else
             {
                 // Use widthPX to redefine view port size.
                 scale = (float)widthPX / faceD.getWidthPX();
                 h = ROUND(scale * faceD.getHeightPX());
-                y = (cardHeight - h)/2;
+                y = ((cardHeight - h)/2) + cardBorder;
             }
         }
     }
@@ -267,9 +273,13 @@ static string drawImage(const desc & faceD, const string & fileName)
         desc pipD(scaledPip, fileName);
         if (pipD.isFileFound())
         {
-            outputStream << "\t-draw \"image over " << pipD.getOriginX()+x << ',' << pipD.getOriginY()+y << ' ' << ROUND(pipD.getWidth()) << ',' << ROUND(pipD.getHeight()) << " '" << fileName << "'\" \\" << endl;
+            const int x2{pipD.getOriginX()+x};
+            const int y2{pipD.getOriginY()+y};
+            const int w2{ROUND(pipD.getWidth())};
+            const int h2{ROUND(pipD.getHeight())};
+            outputStream << "\t-draw \"image over " << x2 << ',' << y2 << ' ' << w2 << ',' << h2 << " '" << fileName << "'\" \\" << endl;
             outputStream << "\t-rotate 180 \\" << endl;
-            outputStream << "\t-draw \"image over " << pipD.getOriginX()+x << ',' << pipD.getOriginY()+y << ' ' << ROUND(pipD.getWidth()) << ',' << ROUND(pipD.getHeight()) << " '" << fileName << "'\" \\" << endl;
+            outputStream << "\t-draw \"image over " << x2 << ',' << y2 << ' ' << w2 << ',' << h2 << " '" << fileName << "'\" \\" << endl;
             outputStream << "\t-rotate 180 \\" << endl;
         }
     }

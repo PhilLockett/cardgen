@@ -47,6 +47,7 @@ using namespace std;
 
 extern int cardWidth;
 extern int cardHeight;
+extern int cardBorder;
 extern string cardColour;
 
 extern info indexInfo;
@@ -63,6 +64,10 @@ extern string outputDirectory;
 extern string refreshFilename;
 
 extern bool keepAspectRatio;
+extern bool mpc;
+const int mpcWidth{750};
+const int mpcHeight{1050};
+const int mpcBorder{36};
 
 extern float cornerRadius;
 extern int radius;

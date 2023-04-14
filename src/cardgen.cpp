@@ -34,6 +34,7 @@
 
 int cardWidth{380};
 int cardHeight{532};
+int cardBorder{};
 string cardColour{"white"};
 
 info indexInfo(10.5, 8.07, 9.84);
@@ -50,6 +51,7 @@ string refreshFilename{"x_refresh.sh"};
 string outputDirectory{};
 
 bool keepAspectRatio{};
+bool mpc{};
 
 float cornerRadius{3.76};
 int radius{};
