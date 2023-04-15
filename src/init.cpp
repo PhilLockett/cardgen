@@ -149,8 +149,8 @@ static int parseCommandLine(int argc, char *argv[])
 
         switch (optchr)
         {
-            case 'w': cardWidthPx = atoi(optarg);             break;
-            case 'h': cardHeightPx = atoi(optarg);            break;
+            case 'w': cardWidthPx = atoi(optarg);           break;
+            case 'h': cardHeightPx = atoi(optarg);          break;
             case 'c': cardColour = string(optarg);          break;
 
             case 'i': indexDirectory = string(optarg);      break;
@@ -175,8 +175,8 @@ static int parseCommandLine(int argc, char *argv[])
             case 8:   standardPipInfo.setX(atof(optarg));   break;
             case 9:   standardPipInfo.setY(atof(optarg));   break;
 
-            case 10:  imageBorderX = atof(optarg);               break;
-            case 11:  imageBorderY = atof(optarg);               break;
+            case 10:  imageBorderX = atof(optarg);          break;
+            case 11:  imageBorderY = atof(optarg);          break;
             case 12:  imagePipInfo.setH(0);                 break;
             case 13:  imagePipInfo.setH(atof(optarg));      break;
             case 14:  imagePipInfo.setX(atof(optarg));      break;
