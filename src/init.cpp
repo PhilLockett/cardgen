@@ -239,6 +239,10 @@ void recalculate(void)
     imageOffsetXPx  = ROUND(imageBorderX * cardWidthPx / 100);
     imageOffsetYPx  = ROUND(imageBorderY * cardHeightPx / 100);
 
+    const float scaleX{imageWidth/originalImageWidth};
+    const float scaleY{imageHeight/originalImageHeight};
+    imagePipScale = (scaleX < scaleY) ? scaleX : scaleY;
+
     imageX      = 50;
     imageY      = imageBorderY + (imageHeight / 2);
 

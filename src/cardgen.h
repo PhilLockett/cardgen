@@ -92,6 +92,7 @@ extern int imageWidthPx;
 extern int imageHeightPx;
 extern int imageOffsetXPx;
 extern int imageOffsetYPx;
+extern float imagePipScale;
 extern float imageX;
 extern float imageY;
 

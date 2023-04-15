@@ -76,6 +76,7 @@ int imageWidthPx{};
 int imageHeightPx{};
 int imageOffsetXPx{};
 int imageOffsetYPx{};
+float imagePipScale{};
 float imageX{};
 float imageY{};
 
