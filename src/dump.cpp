@@ -240,8 +240,24 @@ static string drawImage(const desc & faceD, const string & fileName)
 //- Check if image pips are required.
     if (imagePipInfo.getH())
     {
+        info scaledPip(imagePipInfo);
+
+        const float scaleX{imageWidth/originalImageWidth};
+        const float scaleY{imageHeight/originalImageHeight};
+        scale = (scaleX < scaleY) ? scaleX : scaleY;
+
+//- Rescale image pips, but only if they haven't been manually altered.
+        if (!imagePipInfo.isChangedH())
+            scaledPip.setH(scale * imagePipInfo.getH());
+
+        if (!imagePipInfo.isChangedX())
+            scaledPip.setX(scale * imagePipInfo.getX());
+
+        if (!imagePipInfo.isChangedY())
+            scaledPip.setY(scale * imagePipInfo.getY());
+
 //- Pip Filename is only supplied for court cards if they need pips adding.
-        desc pipD(imagePipInfo, fileName);
+        desc pipD(scaledPip, fileName);
         if (pipD.isFileFound())
         {
             const int x2{pipD.getPortOriginXPx()+x};
