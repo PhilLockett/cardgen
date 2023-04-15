@@ -234,10 +234,10 @@ void recalculate(void)
 //- Card face image values in pixels.
     imageWidth  = 100 - (2 * imageBorderX);
     imageHeight = 50 - imageBorderY;
-    widthPX     = ROUND(imageWidth * cardWidthPx / 100);
-    heightPX    = ROUND(imageHeight * cardHeightPx / 100);
-    offsetX     = ROUND(imageBorderX * cardWidthPx / 100);
-    offsetY     = ROUND(imageBorderY * cardHeightPx / 100);
+    imageWidthPx    = ROUND(imageWidth * cardWidthPx / 100);
+    imageHeightPx   = ROUND(imageHeight * cardHeightPx / 100);
+    imageOffsetXPx  = ROUND(imageBorderX * cardWidthPx / 100);
+    imageOffsetYPx  = ROUND(imageBorderY * cardHeightPx / 100);
 
     imageX      = 50;
     imageY      = imageBorderY + (imageHeight / 2);
@@ -296,10 +296,10 @@ static void dumpValues(void)
 	cout << endl;
 	cout << "imageWidth\t" << imageWidth << endl;
 	cout << "imageHeight\t" << imageHeight << endl;
-	cout << "widthPX\t\t" << widthPX << endl;
-	cout << "heightPX\t" << heightPX << endl;
-	cout << "offsetX\t\t" << offsetX << endl;
-	cout << "offsetY\t\t" << offsetY << endl;
+	cout << "imageWidthPx\t" << imageWidthPx << endl;
+	cout << "imageHeightPx\t" << imageHeightPx << endl;
+	cout << "imageOffsetXPx\t" << imageOffsetXPx << endl;
+	cout << "imageOffsetYPx\t" << imageOffsetYPx << endl;
 	cout << "imageX\t\t" << imageX << endl;
 	cout << "imageY\t\t" << imageY << endl;
 }

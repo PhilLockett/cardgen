@@ -88,10 +88,10 @@ extern float viewportWindowY;
 
 extern float imageWidth;
 extern float imageHeight;
-extern int widthPX;
-extern int heightPX;
-extern int offsetX;
-extern int offsetY;
+extern int imageWidthPx;
+extern int imageHeightPx;
+extern int imageOffsetXPx;
+extern int imageOffsetYPx;
 extern float imageX;
 extern float imageY;
 

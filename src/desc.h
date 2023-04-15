@@ -87,7 +87,7 @@ private:
     bool FileFound;
     int imageWidthPx;
     int imageHeightPx;
-    float AspectRatio;
+    float aspectRatio;
     int portOriginXPx;
     int portOriginYPx;
 
@@ -112,7 +112,7 @@ public:
 
     int getImageHeightPx(void) const { return imageHeightPx; }
     int getImageWidthPx(void) const { return imageWidthPx; }
-    float getAspectRatio(void) const { return AspectRatio; }
+    float getAspectRatio(void) const { return aspectRatio; }
     int getPortOriginXPx(void) const { return portOriginXPx; }
     int getPortOriginYPx(void) const { return portOriginYPx; }
     const string & draw(void) const { return DrawString; }

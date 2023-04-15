@@ -72,10 +72,10 @@ float viewportWindowY{};
 
 float imageWidth{};
 float imageHeight{};
-int widthPX{};
-int heightPX{};
-int offsetX{};
-int offsetY{};
+int imageWidthPx{};
+int imageHeightPx{};
+int imageOffsetXPx{};
+int imageOffsetYPx{};
 float imageX{};
 float imageY{};
 

@@ -184,10 +184,10 @@ static string drawStandardPips(bool rotate, int card, desc & pipD)
 static string drawImage(const desc & faceD, const string & fileName)
 {
     stringstream outputStream{};
-    int x{offsetX + cardBorderPx};
-    int y{offsetY + cardBorderPx};
-    int w{widthPX};
-    int h{heightPX};
+    int x{imageOffsetXPx + cardBorderPx};
+    int y{imageOffsetYPx + cardBorderPx};
+    int w{imageWidthPx};
+    int h{imageHeightPx};
     float scale{1};
     float aspectRatio{};
 
@@ -195,18 +195,18 @@ static string drawImage(const desc & faceD, const string & fileName)
     {
         if (keepAspectRatio)
         {
-            aspectRatio = float(widthPX) / heightPX;
+            aspectRatio = float(imageWidthPx) / imageHeightPx;
             if (faceD.getAspectRatio() < aspectRatio)
             {
-                // Use heightPX to redefine view port size.
-                scale = (float)heightPX / faceD.getImageHeightPx();
+                // Use imageHeightPx to redefine view port size.
+                scale = (float)imageHeightPx / faceD.getImageHeightPx();
                 w = ROUND(scale * faceD.getImageWidthPx()) + 1;
                 x = ((cardWidthPx - w)/2) + cardBorderPx;
             }
             else
             {
-                // Use widthPX to redefine view port size.
-                scale = (float)widthPX / faceD.getImageWidthPx();
+                // Use imageWidthPx to redefine view port size.
+                scale = (float)imageWidthPx / faceD.getImageWidthPx();
                 h = ROUND(scale * faceD.getImageHeightPx());
                 y = (cardHeightPx/2) - h + cardBorderPx;
             }
@@ -214,21 +214,21 @@ static string drawImage(const desc & faceD, const string & fileName)
     }
     else
     {
-        h = 2*heightPX;
+        h = 2*imageHeightPx;
         if (keepAspectRatio)
         {
-            aspectRatio = (float)widthPX / (2*heightPX);
+            aspectRatio = (float)imageWidthPx / (2*imageHeightPx);
             if (faceD.getAspectRatio() < aspectRatio)
             {
-                // Use 2*heightPX to redefine view port size.
-                scale = (float)(heightPX * 2) / faceD.getImageHeightPx();
-                w = ROUND(scale * faceD.getImageWidthPx());
+                // Use 2*imageHeightPx to redefine view port size.
+                scale = (float)imageHeightPx / faceD.getImageHeightPx();
+                w = ROUND(scale * 2 * faceD.getImageWidthPx());
                 x = ((cardWidthPx - w)/2) + cardBorderPx;
             }
             else
             {
-                // Use widthPX to redefine view port size.
-                scale = (float)widthPX / faceD.getImageWidthPx();
+                // Use imageWidthPx to redefine view port size.
+                scale = (float)imageWidthPx / faceD.getImageWidthPx();
                 h = ROUND(scale * faceD.getImageHeightPx());
                 y = ((cardHeightPx - h)/2) + cardBorderPx;
             }
