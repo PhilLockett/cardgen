@@ -27,6 +27,8 @@
 #include <string>
 #include <sstream>
 #include <fstream>
+#include <vector>
+
 #include "cardgen.h"
 #include "desc.h"
 
@@ -36,12 +38,12 @@
  *
  */
 
-static const char* suits[]  = { "C", "D", "H", "S" };
-static const char* alts[]   = { "S", "H", "D", "C" };
-static const char* cards[]  = { "0", "A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K" };
+static const vector<const char*> suits{ "C", "D", "H", "S" };
+static const vector<const char*> alts{ "S", "H", "D", "C" };
+static const vector<const char*> cards{ "0", "A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K" };
 
-static const char* suitNames[]  = { "Clubs", "Diamonds", "Hearts", "Spades" };
-static const char* cardNames[]  = { "Joker", "Ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King" };
+static const vector<const char*> suitNames{ "Clubs", "Diamonds", "Hearts", "Spades" };
+static const vector<const char*> cardNames{ "Joker", "Ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King" };
 
 
 /**
@@ -77,16 +79,24 @@ static string genStartString(void)
  * Constants for drawStandardPips().
  *
  */
-static const float offsets[] = { (1.0F / 2), (0.0F), (1.0F), (1.0F / 4), (1.0F / 3), (1.0F / 6) };
+static const vector<float> offsets{ (1.0F / 2), (0.0F), (1.0F), (1.0F / 4), (1.0F / 3), (1.0F / 6) };
 
-static const struct
+class Loc
 {
-    int     xIndex;
-    int     yIndex;
-    bool    rotate;
+private:
+    const size_t    xIndex;
+    const size_t    yIndex;
+    const bool      rotate;
 
-}
-    loc[] =
+public:
+    Loc(size_t x, size_t y, bool r) : xIndex{x}, yIndex{y}, rotate{r} { }
+
+    size_t getX(void) const { return xIndex; }
+    size_t getY(void) const { return yIndex; }
+    bool isRotate(void) const { return rotate; }
+};
+
+static const vector<Loc> loc
 {
     { 0, 0, false },
     { 0, 1, true },
@@ -108,36 +118,30 @@ static const struct
 
 };
 
-static int getXIndex(int locIndex) { return loc[locIndex].xIndex; }
-static int getYIndex(int locIndex) { return loc[locIndex].yIndex; }
-static bool getRotate(int locIndex) { return loc[locIndex].rotate; }
+static size_t getXIndex(size_t locIndex) { return loc[locIndex].getX(); }
+static size_t getYIndex(size_t locIndex) { return loc[locIndex].getY(); }
+static bool getRotate(size_t locIndex) { return loc[locIndex].isRotate(); }
 
-static float getXOffset(int locIndex) { return offsets[getXIndex(locIndex)]; }
-static float getYOffset(int locIndex) { return offsets[getYIndex(locIndex)]; }
+static float getXOffset(size_t locIndex) { return offsets[getXIndex(locIndex)]; }
+static float getYOffset(size_t locIndex) { return offsets[getYIndex(locIndex)]; }
 
-static const int corners[] = { 3, 5 };
-static const int ace[]     = { 0 };
-static const int c2[]      = { 1, 2 };
-static const int c3[]      = { 1, 0, 2 };
-static const int c4[]      = { 3, 4, 5, 6 };
-static const int c5[]      = { 3, 4, 0, 5, 6 };
-static const int c6[]      = { 3, 4, 5, 6, 7, 8 };
-static const int c7[]      = { 3, 4, 5, 6, 7, 8, 9 };
-static const int c8[]      = { 3, 4, 10, 5, 6, 7, 8, 9 };
-static const int c9[]      = { 3, 4, 11, 12, 0, 5, 6, 13, 14 };
-static const int c10[]     = { 3, 4, 11, 12, 15, 5, 6, 13, 14, 16 };
-static const int jack[]    = { 3, 4, 10, 11, 12, 0, 5, 6, 9, 13, 14 };
-static const int queen[]   = { 1, 3, 4, 10, 11, 12, 2, 5, 6, 9, 13, 14 };
-static const int king[]    = { 1, 3, 4, 10, 11, 12, 0, 2, 5, 6, 9, 13, 14 };
+static const vector<size_t> corners{ 3, 5 };
+static const vector<size_t> ace{ 0 };
+static const vector<size_t> c2{ 1, 2 };
+static const vector<size_t> c3{ 1, 0, 2 };
+static const vector<size_t> c4{ 3, 4, 5, 6 };
+static const vector<size_t> c5{ 3, 4, 0, 5, 6 };
+static const vector<size_t> c6{ 3, 4, 5, 6, 7, 8 };
+static const vector<size_t> c7{ 3, 4, 5, 6, 7, 8, 9 };
+static const vector<size_t> c8{ 3, 4, 10, 5, 6, 7, 8, 9 };
+static const vector<size_t> c9{ 3, 4, 11, 12, 0, 5, 6, 13, 14 };
+static const vector<size_t> c10{ 3, 4, 11, 12, 15, 5, 6, 13, 14, 16 };
+static const vector<size_t> jack{ 3, 4, 10, 11, 12, 0, 5, 6, 9, 13, 14 };
+static const vector<size_t> queen{ 1, 3, 4, 10, 11, 12, 2, 5, 6, 9, 13, 14 };
+static const vector<size_t> king{ 1, 3, 4, 10, 11, 12, 0, 2, 5, 6, 9, 13, 14 };
 
-#define AD(a) { ELEMENTS(a), a }
+static const vector<vector<size_t> > patterns{ corners, ace, c2, c3, c4, c5, c6, c7, c8, c9, c10, jack, queen, king };
 
-const struct
-{
-    int length;
-    const int * const locations;
-}
-patterns[] = { AD(corners), AD(ace), AD(c2), AD(c3), AD(c4), AD(c5), AD(c6), AD(c7), AD(c8), AD(c9), AD(c10), AD(jack), AD(queen), AD(king) };
 
 
 /**
@@ -149,13 +153,12 @@ patterns[] = { AD(corners), AD(ace), AD(c2), AD(c3), AD(c4), AD(c5), AD(c6), AD(
  * @param  fileName - name of image file for the pip.
  * @return the generated string.
  */
-static string drawStandardPips(bool rotate, int card, desc & pipD)
+static string drawStandardPips(bool rotate, size_t card, desc & pipD)
 {
     stringstream outputStream;
 
-    for (int i = 0; i < patterns[card].length; ++i)
+    for (size_t index : patterns[card])
     {
-        const int index = patterns[card].locations[i];
         if (getRotate(index) == rotate)
         {
             const float offX = standardPipInfo.getX() + (getXOffset(index) * viewportWindowX);
@@ -451,13 +454,12 @@ int generateScript(int argc, char *argv[])
 
 //- Initial blank card string used as a template for each card.
     string startString = genStartString();
-    string suit;
     string card;
 
 //- Generate all the playing cards.
-    for (int s = 0; s < ELEMENTS(suits); ++s)
+    for (size_t s = 0; s < suits.size(); ++s)
     {
-        suit    = string(suits[s]);
+        string suit{string(suits[s])};
 
         string pipFile = string("pips/") + pipDirectory + "/" + suit + "S.png";     // Try small pip file first.
         desc pipD(cornerPipInfo, pipFile);
@@ -471,7 +473,7 @@ int generateScript(int argc, char *argv[])
         // Generate the playing cards in the current suit.
         pipFile = string("pips/") + pipDirectory + "/" + suit + ".png";             // Use standard pip file.
         desc standardPipD(standardPipInfo, pipFile);
-        for (int c = 1; c < ELEMENTS(cards); ++c)
+        for (size_t c = 1; c < cards.size(); ++c)
         {
             // Set up the variables.
             card = string(cards[c]);
@@ -540,7 +542,7 @@ int generateScript(int argc, char *argv[])
     recalculate();
 
     int fails = 0;
-    for (int s = 0; s < ELEMENTS(suits); ++s)
+    for (int s = 0; s < suits.size(); ++s)
     {
         fails += drawJoker(fails, file, s);
     }

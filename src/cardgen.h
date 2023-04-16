@@ -31,10 +31,6 @@
 
 using namespace std;
 
-#if !defined ELEMENTS
-#define ELEMENTS(A) (sizeof(A)/sizeof(A[0]))
-#endif
-
 #if !defined ROUND
 #define ROUND(v) (int)((v) + 0.5)
 #endif
