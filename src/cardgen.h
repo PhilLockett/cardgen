@@ -60,8 +60,8 @@ extern string pipDirectory;
 extern string faceDirectory;
 
 extern string scriptFilename;
-extern string outputDirectory;
 extern string refreshFilename;
+extern string outputDirectory;
 
 extern bool keepAspectRatio;
 extern bool mpc;
@@ -80,8 +80,6 @@ extern float imageBorderX;
 extern float imageBorderY;
 extern float originalImageWidth;
 extern float originalImageHeight;
-extern int originalWidthPx;
-extern int originalHeightPx;
 
 extern float viewportWindowX;
 extern float viewportWindowY;

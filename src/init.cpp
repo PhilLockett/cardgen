@@ -290,10 +290,6 @@ static void dumpValues(void)
 	cout << "imageBorderY\t" << imageBorderY << endl;
 	cout << "originalImageWidth\t" << originalImageWidth << endl;
 	cout << "originalImageHeight\t" << originalImageHeight << endl;
-	cout << "originalWidthPx \t" << originalWidthPx << endl;
-	cout << "originalHeightPx\t" << originalHeightPx << endl;
-	// cout << "imageOffset\t" << imageOffset << endl;
-	// cout << "aspectRatio\t" << aspectRatio << endl;
 	cout << endl;
 	cout << "viewportWindowX\t" << viewportWindowX << endl;
 	cout << "viewportWindowY\t" << viewportWindowY << endl;

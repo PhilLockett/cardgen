@@ -64,8 +64,6 @@ float imageBorderX{14.54};
 float imageBorderY{10.14};
 float originalImageWidth{100 - (2 * imageBorderX)};
 float originalImageHeight{50 - imageBorderY};
-int originalWidthPx{ROUND(originalImageWidth * cardWidthPx / 100)};
-int originalHeightPx{ROUND(originalImageHeight * cardHeightPx / 100)};
 
 float viewportWindowX{};
 float viewportWindowY{};
