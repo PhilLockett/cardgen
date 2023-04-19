@@ -58,22 +58,39 @@ static const vector<const char*> cardNames{ "Joker", "Ace", "2", "3", "4", "5", 
  */
 static string genStartString(void)
 {
-    stringstream outputString{};
+    static string outputString{};
+    if (outputString.empty())
+    {
+        stringstream stream{};
 
-    outputString  << "convert -size " << cardWidthPx + (2 * cardBorderPx) << "x" << cardHeightPx + (2 * cardBorderPx) << " xc:transparent  \\" << endl;
-    outputString  << "\t-fill '" << cardColour << "' ";
-    if (mpc)
-        outputString  << "-draw 'rectangle " << borderOffset << ',' << borderOffset << ' ' << outlineWidth + (2 * cardBorderPx) << ',' << outlineHeight + (2 * cardBorderPx) << "'";
-    else
-    if (radius)
-        outputString  << "-stroke black -strokewidth " << strokeWidth << " -draw 'roundRectangle " << borderOffset << ',' << borderOffset << ' ' << outlineWidth << ',' << outlineHeight << ' ' << radius << ',' << radius << "'";
-    else
-        outputString  << "-stroke black -strokewidth " << strokeWidth << " -draw 'rectangle " << borderOffset << ',' << borderOffset << ' ' << outlineWidth << ',' << outlineHeight << "'";
-    outputString  << " \\" << endl;
+        stream  << "convert -size " << cardWidthPx + (2 * cardBorderPx) << "x" << cardHeightPx + (2 * cardBorderPx) << " xc:transparent  \\" << endl;
+        stream  << "\t-fill '" << cardColour << "' ";
+        if (mpc)
+            stream  << "-draw 'rectangle " << borderOffset << ',' << borderOffset << ' ' << outlineWidth + (2 * cardBorderPx) << ',' << outlineHeight + (2 * cardBorderPx) << "'";
+        else
+        if (radius)
+            stream  << "-stroke black -strokewidth " << strokeWidth << " -draw 'roundRectangle " << borderOffset << ',' << borderOffset << ' ' << outlineWidth << ',' << outlineHeight << ' ' << radius << ',' << radius << "'";
+        else
+            stream  << "-stroke black -strokewidth " << strokeWidth << " -draw 'rectangle " << borderOffset << ',' << borderOffset << ' ' << outlineWidth << ',' << outlineHeight << "'";
+        stream  << " \\" << endl;
 
-    return outputString.str();
+        outputString = stream.str();
+    }
+
+    return outputString;
 }
 
+/**
+ * Generate the final blank card string to end each card.
+ *
+ * @return the generated string.
+ */
+static void genEndString(ofstream & file, const std::string & fileName)
+{
+    file << "\t+dither -colors 256 \\" << endl;
+    file << "\tcards/" << outputDirectory << "/" << fileName << ".png" << endl;
+    file << endl;
+}
 
 /**
  * Constants for drawStandardPips().
@@ -295,9 +312,7 @@ static void drawImageMagickJoker(ofstream & file, const string & fileName)
     file << drawImage(faceD, "");
     file << headerD.draw();
     file << footerD.draw();
-    file << "\t+dither -colors 256 \\" << endl;
-    file << "\tcards/" << outputDirectory << "/" << fileName << ".png" << endl;
-    file << endl;
+    genEndString(file, fileName);
 }
 
 
@@ -310,12 +325,9 @@ static void drawImageMagickJoker(ofstream & file, const string & fileName)
  */
 static void drawDefaultJoker(ofstream & file, const string & fileName, int suit)
 {
-    // string startString{genStartString()};
-
     const string faceFile{"boneyard/Back.png"};
     const desc faceD(95, 50, 50, faceFile);
 
-    // startString = genStartString();
     file << genStartString();
 
     // Draw "Joker" indices if provided.
@@ -329,9 +341,7 @@ static void drawDefaultJoker(ofstream & file, const string & fileName, int suit)
     }
 
     file << drawImage(faceD, "");
-    file << "\t+dither -colors 256 \\" << endl;
-    file << "\tcards/" << outputDirectory << "/" << fileName << ".png" << endl;
-    file << endl;
+    genEndString(file, fileName);
 }
 
 
@@ -370,9 +380,7 @@ static int drawJoker(int fails, ofstream & file, int suit)
             file << drawImage(faceD, "");
         }
 
-        file << "\t+dither -colors 256 \\" << endl;
-        file << "\tcards/" << outputDirectory << "/" << fileName << ".png" << endl;
-        file << endl;
+        genEndString(file, fileName);
 
         return 0;
     }
@@ -450,7 +458,6 @@ int generateScript(int argc, char *argv[])
 
 //- Initial blank card string used as a template for each card.
     const string startString{genStartString()};
-    string card{};
 
 //- Generate all the playing cards.
     for (size_t s = 0; s < suits.size(); ++s)
@@ -472,9 +479,10 @@ int generateScript(int argc, char *argv[])
         for (size_t c = 1; c < cards.size(); ++c)
         {
             // Set up the variables.
-            card = string(cards[c]);
+            string card{string(cards[c])};
+            string fileName{suit + card};
 
-            string indexFile{string("indices/") + indexDirectory + "/" + suit + card + ".png"};
+            string indexFile{string("indices/") + indexDirectory + "/" + fileName + ".png"};
             desc indexD{indexInfo, indexFile};
             if (!indexD.isFileFound())
             {
@@ -483,7 +491,7 @@ int generateScript(int argc, char *argv[])
                 indexD.setFileName(indexFile);
             }
 
-            string faceFile{string("faces/") + faceDirectory + "/" + suit + card + ".png"};
+            string faceFile{string("faces/") + faceDirectory + "/" + fileName + ".png"};
             desc faceD{imageHeight, imageX, imageY, faceFile};
 
             string drawFace{};
@@ -502,7 +510,7 @@ int generateScript(int argc, char *argv[])
 
 
             // Write to output file.
-            file << "# Draw the " << cardNames[c] << " of " << suitNames[s] << " as file " << suit << card << ".png." << endl;
+            file << "# Draw the " << cardNames[c] << " of " << suitNames[s] << " as file " << fileName << ".png." << endl;
             file << startString;
 
             if ((faceD.useStandardPips()) || (faceD.isFileFound() && faceD.isLandscape()))
@@ -522,10 +530,7 @@ int generateScript(int argc, char *argv[])
             file << pipD.draw();			// Draw corner pip.
             file << indexD.draw();			// Draw index.
 
-            file << "\t+dither -colors 256 \\" << endl;
-            file << "\tcards/" << outputDirectory << "/" << suit << card << ".png" << endl;
-
-            file << endl;
+            genEndString(file, fileName);
         }
     }
 
