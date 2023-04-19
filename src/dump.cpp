@@ -181,7 +181,7 @@ static string drawStandardPips(bool rotate, size_t card, desc & pipD)
             const float offX = standardPipInfo.getX() + (getXOffset(index) * viewportWindowX);
             const float offY = standardPipInfo.getY() + (getYOffset(index) * viewportWindowY);
 
-            pipD.repos(offX, offY);
+            pipD.reposition(offX, offY);
             outputString  << pipD.draw();
         }
     }

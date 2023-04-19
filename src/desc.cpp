@@ -169,7 +169,7 @@ desc::desc(info & I, const string & fileName)
  * @param  X - X value of centre of image as a percentage of card width.
  * @param  Y - Y value of centre of image as a percentage of card height.
  */
-void desc::repos(float X, float Y)
+void desc::reposition(float X, float Y)
 {
     portCentreXPx = X * cardWidthPx / 100;
     portCentreYPx = Y * cardHeightPx / 100;

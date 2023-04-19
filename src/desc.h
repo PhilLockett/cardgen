@@ -101,7 +101,7 @@ private:
 public:
     desc(float H, float X, float Y, const string & FN);
     desc(info & I, const string & FN);
-    void repos(float X, float Y);
+    void reposition(float X, float Y);
     void setFileName(const string & fileName);
     const string & getFileName(void) const { return FileName; }
 
