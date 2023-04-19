@@ -100,10 +100,11 @@ static int parseCommandLine(int argc, char *argv[])
 {
     while (1)
     {
-        int option_index = 0;
-        int optchr;
+        int option_index{};
+        int optchr{};
 
-        static struct option long_options[] = {
+        static struct option long_options[]
+        {
             {"width",   required_argument,0,'w'},
             {"height",  required_argument,0,'h'},
             {"colour",  required_argument,0,'c'},
@@ -248,9 +249,7 @@ void recalculate(void)
 
 //- If "outputDirectory" isn't explicitly set, use "face".
     if (!outputDirectory.length())
-    {
         outputDirectory = faceDirectory;
-    }
 }
 
 
@@ -316,14 +315,10 @@ static void dumpValues(void)
  */
 int init(int argc, char *argv[])
 {
-    int ret = 0;
-
 //- Process command line input.
-    ret = parseCommandLine(argc, argv);
+    int ret{parseCommandLine(argc, argv)};
     if (!ret)
-    {
         recalculate();
-    }
 
 #if defined DEBUG
     dumpValues();

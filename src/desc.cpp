@@ -51,7 +51,7 @@ void info::print(ostream &os) const
 bool desc::isValidPNG(const char * const buffer)
 {
     const uint8_t magic[] = { 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A };
-    for (int i = 0; i < sizeof(magic); ++i)
+    for (int i{}; i < sizeof(magic); ++i)
     {
         if ((uint8_t)buffer[i] != magic[i])
             return false;
@@ -74,15 +74,13 @@ int desc::getImageSize(void)
     aspectRatio = 1;
 
 //- Open the binary file.
-    ifstream file(FileName, ifstream::in|ifstream::binary);
+    ifstream file{FileName, ifstream::in|ifstream::binary};
 
     if (!file.is_open())
-    {
         return 1;
-    }
 
 //- Success. Read header data.
-    char buffer[28];
+    char buffer[28]{};
 
     file.read(buffer, 24);
     if ((file) && (isValidPNG(buffer)))
@@ -113,9 +111,9 @@ int desc::getImageSize(void)
         return 0;
     }
 
-    stringstream outputStream;
-    outputStream  << "\t-draw \"image over " << portOriginXPx + cardBorderPx << ',' << portOriginYPx + cardBorderPx << ' ' << ROUND(portWidthPx) << ',' << ROUND(portHeightPx) << " '" << FileName << "'\" \\" << endl;
-    DrawString = outputStream.str();
+    stringstream outputString{};
+    outputString  << "\t-draw \"image over " << portOriginXPx + cardBorderPx << ',' << portOriginYPx + cardBorderPx << ' ' << ROUND(portWidthPx) << ',' << ROUND(portHeightPx) << " '" << FileName << "'\" \\" << endl;
+    DrawString = outputString.str();
 
     return 0;
 }

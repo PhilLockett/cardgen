@@ -89,12 +89,10 @@ float imageY{};
 int main(int argc, char *argv[])
 {
 //- Get the command line parameters.
-    int ret = init(argc, argv);
+    int ret{init(argc, argv)};
 
     if (ret < 0)
-    {
         return 1;
-    }
 
 //- If all is well, generate the script.
     if (!ret)
