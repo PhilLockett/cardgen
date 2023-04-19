@@ -58,20 +58,20 @@ static const vector<const char*> cardNames{ "Joker", "Ace", "2", "3", "4", "5", 
  */
 static string genStartString(void)
 {
-    stringstream outputStream;
-    outputStream  << "convert -size " << cardWidthPx + (2 * cardBorderPx) << "x" << cardHeightPx + (2 * cardBorderPx) << " xc:transparent  \\" << endl;
+    stringstream outputString{};
 
-    outputStream  << "\t-fill '" << cardColour << "' ";
+    outputString  << "convert -size " << cardWidthPx + (2 * cardBorderPx) << "x" << cardHeightPx + (2 * cardBorderPx) << " xc:transparent  \\" << endl;
+    outputString  << "\t-fill '" << cardColour << "' ";
     if (mpc)
-        outputStream  << "-draw 'rectangle " << borderOffset << ',' << borderOffset << ' ' << outlineWidth + (2 * cardBorderPx) << ',' << outlineHeight + (2 * cardBorderPx) << "'";
+        outputString  << "-draw 'rectangle " << borderOffset << ',' << borderOffset << ' ' << outlineWidth + (2 * cardBorderPx) << ',' << outlineHeight + (2 * cardBorderPx) << "'";
     else
     if (radius)
-        outputStream  << "-stroke black -strokewidth " << strokeWidth << " -draw 'roundRectangle " << borderOffset << ',' << borderOffset << ' ' << outlineWidth << ',' << outlineHeight << ' ' << radius << ',' << radius << "'";
+        outputString  << "-stroke black -strokewidth " << strokeWidth << " -draw 'roundRectangle " << borderOffset << ',' << borderOffset << ' ' << outlineWidth << ',' << outlineHeight << ' ' << radius << ',' << radius << "'";
     else
-        outputStream  << "-stroke black -strokewidth " << strokeWidth << " -draw 'rectangle " << borderOffset << ',' << borderOffset << ' ' << outlineWidth << ',' << outlineHeight << "'";
-    outputStream  << " \\" << endl;
+        outputString  << "-stroke black -strokewidth " << strokeWidth << " -draw 'rectangle " << borderOffset << ',' << borderOffset << ' ' << outlineWidth << ',' << outlineHeight << "'";
+    outputString  << " \\" << endl;
 
-    return outputStream.str();
+    return outputString.str();
 }
 
 
@@ -155,7 +155,7 @@ static const vector<vector<size_t> > patterns{ corners, ace, c2, c3, c4, c5, c6,
  */
 static string drawStandardPips(bool rotate, size_t card, desc & pipD)
 {
-    stringstream outputStream;
+    stringstream outputString{};
 
     for (size_t index : patterns[card])
     {
@@ -165,11 +165,11 @@ static string drawStandardPips(bool rotate, size_t card, desc & pipD)
             const float offY = standardPipInfo.getY() + (getYOffset(index) * viewportWindowY);
 
             pipD.repos(offX, offY);
-            outputStream  << pipD.draw();
+            outputString  << pipD.draw();
         }
     }
 
-    return outputStream.str();
+    return outputString.str();
 }
 
 
@@ -186,7 +186,7 @@ static string drawStandardPips(bool rotate, size_t card, desc & pipD)
  */
 static string drawImage(const desc & faceD, const string & fileName)
 {
-    stringstream outputStream{};
+    stringstream outputString{};
     int x{imageOffsetXPx + cardBorderPx};
     int y{imageOffsetYPx + cardBorderPx};
     int w{imageWidthPx};
@@ -238,12 +238,12 @@ static string drawImage(const desc & faceD, const string & fileName)
         }
     }
 
-    outputStream << "\t-draw \"image over " << x << ',' << y << ' ' << w << ',' << h << " '" << faceD.getFileName() << "'\" \\" << endl;
+    outputString << "\t-draw \"image over " << x << ',' << y << ' ' << w << ',' << h << " '" << faceD.getFileName() << "'\" \\" << endl;
 
 //- Check if image pips are required.
     if (imagePipInfo.getH())
     {
-        info scaledPip(imagePipInfo);
+        info scaledPip{imagePipInfo};
 
 //- Rescale image pips, but only if they haven't been manually altered.
         if (!imagePipInfo.isChangedH())
@@ -256,21 +256,22 @@ static string drawImage(const desc & faceD, const string & fileName)
             scaledPip.setY(imagePipScale * imagePipInfo.getY());
 
 //- Pip Filename is only supplied for court cards if they need pips adding.
-        desc pipD(scaledPip, fileName);
+        desc pipD{scaledPip, fileName};
         if (pipD.isFileFound())
         {
             const int x2{pipD.getPortOriginXPx()+x};
             const int y2{pipD.getPortOriginYPx()+y};
             const int w2{ROUND(pipD.getPortWidthPx())};
             const int h2{ROUND(pipD.getPortHeightPx())};
-            outputStream << "\t-draw \"image over " << x2 << ',' << y2 << ' ' << w2 << ',' << h2 << " '" << fileName << "'\" \\" << endl;
-            outputStream << "\t-rotate 180 \\" << endl;
-            outputStream << "\t-draw \"image over " << x2 << ',' << y2 << ' ' << w2 << ',' << h2 << " '" << fileName << "'\" \\" << endl;
-            outputStream << "\t-rotate 180 \\" << endl;
+
+            outputString << "\t-draw \"image over " << x2 << ',' << y2 << ' ' << w2 << ',' << h2 << " '" << fileName << "'\" \\" << endl;
+            outputString << "\t-rotate 180 \\" << endl;
+            outputString << "\t-draw \"image over " << x2 << ',' << y2 << ' ' << w2 << ',' << h2 << " '" << fileName << "'\" \\" << endl;
+            outputString << "\t-rotate 180 \\" << endl;
         }
     }
 
-    return outputStream.str();
+    return outputString.str();
 }
 
 
@@ -282,17 +283,15 @@ static string drawImage(const desc & faceD, const string & fileName)
  */
 static void drawImageMagickJoker(ofstream & file, const string & fileName)
 {
-    string startString = genStartString();
+    const string faceFile{"boneyard/ImageMagick_logo.svg.png"};
+    const desc faceD{95, 50, 50, faceFile};
 
-    string faceFile = string("boneyard/ImageMagick_logo.svg.png");
-    desc faceD(95, 50, 50, faceFile);
+    const string headerFile{"boneyard/ImageMagickUsage.png"};
+    const desc headerD{4, 50, 10, headerFile};
+    const string footerFile{"boneyard/ImageMagickURL.png"};
+    const desc footerD{3, 50, 90, footerFile};
 
-    string headerFile = string("boneyard/ImageMagickUsage.png");
-    desc headerD(4, 50, 10, headerFile);
-    string footerFile = string("boneyard/ImageMagickURL.png");
-    desc footerD(3, 50, 90, footerFile);
-
-    file << startString;
+    file << genStartString();
     file << drawImage(faceD, "");
     file << headerD.draw();
     file << footerD.draw();
@@ -311,17 +310,17 @@ static void drawImageMagickJoker(ofstream & file, const string & fileName)
  */
 static void drawDefaultJoker(ofstream & file, const string & fileName, int suit)
 {
-    string startString = genStartString();
+    // string startString{genStartString()};
 
-    string faceFile = string("boneyard/Back.png");
-    desc faceD(95, 50, 50, faceFile);
+    const string faceFile{"boneyard/Back.png"};
+    const desc faceD(95, 50, 50, faceFile);
 
-    startString = genStartString();
-    file << startString;
+    // startString = genStartString();
+    file << genStartString();
 
     // Draw "Joker" indices if provided.
-    string indexFile = string("indices/") + indexDirectory + "/" + string(suits[suit]) + "Joker.png";
-    desc indexD(indexInfo, indexFile);
+    const string indexFile{"indices/" + indexDirectory + "/" + suits[suit] + "Joker.png"};
+    const desc indexD(indexInfo, indexFile);
     if (indexD.isFileFound())
     {
         file << indexD.draw();
@@ -348,17 +347,16 @@ static int drawJoker(int fails, ofstream & file, int suit)
 {
     file << "# Draw the " << suitNames[suit] << " " << cardNames[0] << " as file " << suits[suit] << cardNames[0] << ".png" << endl;
 
-    string fileName = string(suits[suit]) + cardNames[0];
-    string faceFile = string("faces/") + faceDirectory + "/" + fileName + ".png";
-    desc faceD(95, 50, 50, faceFile);
+    const string fileName{string(suits[suit]) + cardNames[0]};
+    const string faceFile{"faces/" + faceDirectory + "/" + fileName + ".png"};
+    const desc faceD{95, 50, 50, faceFile};
 
-    string indexFile = string("indices/") + indexDirectory + "/" + fileName + ".png";
-    desc indexD(indexInfo, indexFile);
+    const string indexFile{"indices/" + indexDirectory + "/" + fileName + ".png"};
+    const desc indexD{indexInfo, indexFile};
 
     if ((indexD.isFileFound()) || (faceD.isFileFound()))
     {
-        string startString = genStartString();
-        file << startString;
+        file << genStartString();
 
         if (indexD.isFileFound())
         {
@@ -405,7 +403,7 @@ static int drawJoker(int fails, ofstream & file, int suit)
  */
 int generateScript(int argc, char *argv[])
 {
-    ofstream file(scriptFilename.c_str());
+    ofstream file{scriptFilename.c_str()};
 
 //- Open the script file for writing.
     if (!file)
@@ -422,9 +420,8 @@ int generateScript(int argc, char *argv[])
     file << "#" << endl;
     file << "#  ";
     for (int i = 0; i < argc; ++i)
-    {
         file << argv[i] << ' ';
-    }
+
     file << endl;
     file << "#" << endl;
     file << endl;
@@ -441,9 +438,8 @@ int generateScript(int argc, char *argv[])
     file << "#" << endl;
     file << "cd ../../" << endl;
     for (int i = 0; i < argc; ++i)
-    {
         file << argv[i] << ' ';
-    }
+
     file << endl;
     file << "./" << scriptFilename << endl;
     file << "EOM" << endl;
@@ -453,16 +449,16 @@ int generateScript(int argc, char *argv[])
 
 
 //- Initial blank card string used as a template for each card.
-    string startString = genStartString();
-    string card;
+    const string startString{genStartString()};
+    string card{};
 
 //- Generate all the playing cards.
     for (size_t s = 0; s < suits.size(); ++s)
     {
-        string suit{string(suits[s])};
+        const string suit{string(suits[s])};
 
-        string pipFile = string("pips/") + pipDirectory + "/" + suit + "S.png";     // Try small pip file first.
-        desc pipD(cornerPipInfo, pipFile);
+        string pipFile{string("pips/") + pipDirectory + "/" + suit + "S.png"};     // Try small pip file first.
+        desc pipD{cornerPipInfo, pipFile};
         if (!pipD.isFileFound())
         {
             // Small pip file not found, so use standard pip file.
@@ -472,14 +468,14 @@ int generateScript(int argc, char *argv[])
 
         // Generate the playing cards in the current suit.
         pipFile = string("pips/") + pipDirectory + "/" + suit + ".png";             // Use standard pip file.
-        desc standardPipD(standardPipInfo, pipFile);
+        desc standardPipD{standardPipInfo, pipFile};
         for (size_t c = 1; c < cards.size(); ++c)
         {
             // Set up the variables.
             card = string(cards[c]);
 
-            string indexFile = string("indices/") + indexDirectory + "/" + suit + card + ".png";
-            desc indexD(indexInfo, indexFile);
+            string indexFile{string("indices/") + indexDirectory + "/" + suit + card + ".png"};
+            desc indexD{indexInfo, indexFile};
             if (!indexD.isFileFound())
             {
                 // indexInfo for suit file not found, so use alternate index file.
@@ -487,10 +483,10 @@ int generateScript(int argc, char *argv[])
                 indexD.setFileName(indexFile);
             }
 
-            string faceFile = string("faces/") + faceDirectory + "/" + suit + card + ".png";
-            desc faceD(imageHeight, imageX, imageY, faceFile);
+            string faceFile{string("faces/") + faceDirectory + "/" + suit + card + ".png"};
+            desc faceD{imageHeight, imageX, imageY, faceFile};
 
-            string drawFace;
+            string drawFace{};
 
             if (faceD.useStandardPips())
             {
@@ -541,11 +537,9 @@ int generateScript(int argc, char *argv[])
     indexInfo.setY(20.0);
     recalculate();
 
-    int fails = 0;
+    int fails{};
     for (int s = 0; s < suits.size(); ++s)
-    {
         fails += drawJoker(fails, file, s);
-    }
 
     file << "echo Output created in cards/" << outputDirectory << "/" << endl;
     file << endl;
