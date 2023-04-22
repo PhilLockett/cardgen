@@ -113,7 +113,7 @@ public:
     bool isRotate(void) const { return rotate; }
 };
 
-static const vector<Loc> loc
+static const vector<Loc> locations
 {
     { 0, 0, false },
     { 0, 1, true },
@@ -135,9 +135,9 @@ static const vector<Loc> loc
 
 };
 
-static size_t getXIndex(size_t locIndex) { return loc[locIndex].getX(); }
-static size_t getYIndex(size_t locIndex) { return loc[locIndex].getY(); }
-static bool getRotate(size_t locIndex) { return loc[locIndex].isRotate(); }
+static size_t getXIndex(size_t locIndex) { return locations[locIndex].getX(); }
+static size_t getYIndex(size_t locIndex) { return locations[locIndex].getY(); }
+static bool getRotate(size_t locIndex) { return locations[locIndex].isRotate(); }
 
 static float getXOffset(size_t locIndex) { return offsets[getXIndex(locIndex)]; }
 static float getYOffset(size_t locIndex) { return offsets[getYIndex(locIndex)]; }
@@ -174,12 +174,12 @@ static string drawStandardPips(bool rotate, size_t card, desc & pipD)
 {
     stringstream outputString{};
 
-    for (size_t index : patterns[card])
+    for (size_t pattern : patterns[card])
     {
-        if (getRotate(index) == rotate)
+        if (getRotate(pattern) == rotate)
         {
-            const float offX = standardPipInfo.getX() + (getXOffset(index) * viewportWindowX);
-            const float offY = standardPipInfo.getY() + (getYOffset(index) * viewportWindowY);
+            const float offX = standardPipInfo.getX() + (getXOffset(pattern) * viewportWindowX);
+            const float offY = standardPipInfo.getY() + (getYOffset(pattern) * viewportWindowY);
 
             pipD.reposition(offX, offY);
             outputString  << pipD.draw();
