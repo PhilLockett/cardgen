@@ -31,6 +31,7 @@
 
 #include "cardgen.h"
 #include "desc.h"
+#include "Loc.h"
 
 
 /**
@@ -93,75 +94,6 @@ static void genEndString(ofstream & file, const std::string & fileName)
 }
 
 /**
- * Constants for drawStandardPips().
- *
- */
-static const vector<float> offsets{ (1.0F / 2), (0.0F), (1.0F), (1.0F / 4), (1.0F / 3), (1.0F / 6) };
-
-class Loc
-{
-private:
-    const size_t    xIndex;
-    const size_t    yIndex;
-    const bool      rotate;
-
-public:
-    Loc(size_t x, size_t y, bool r) : xIndex{x}, yIndex{y}, rotate{r} { }
-
-    size_t getX(void) const { return xIndex; }
-    size_t getY(void) const { return yIndex; }
-    bool isRotate(void) const { return rotate; }
-};
-
-static const vector<Loc> locations
-{
-    { 0, 0, false },
-    { 0, 1, true },
-    { 0, 1, false },
-    { 1, 1, true },
-    { 2, 1, true },
-    { 1, 1, false },
-    { 2, 1, false },
-    { 1, 0, false },
-    { 2, 0, false },
-    { 0, 3, false },
-    { 0, 3, true },
-    { 1, 4, true },
-    { 2, 4, true },
-    { 1, 4, false },
-    { 2, 4, false },
-    { 0, 5, true },
-    { 0, 5, false }
-
-};
-
-static size_t getXIndex(size_t locIndex) { return locations[locIndex].getX(); }
-static size_t getYIndex(size_t locIndex) { return locations[locIndex].getY(); }
-static bool getRotate(size_t locIndex) { return locations[locIndex].isRotate(); }
-
-static float getXOffset(size_t locIndex) { return offsets[getXIndex(locIndex)]; }
-static float getYOffset(size_t locIndex) { return offsets[getYIndex(locIndex)]; }
-
-static const vector<size_t> corners{ 3, 5 };
-static const vector<size_t> ace{ 0 };
-static const vector<size_t> c2{ 1, 2 };
-static const vector<size_t> c3{ 1, 0, 2 };
-static const vector<size_t> c4{ 3, 4, 5, 6 };
-static const vector<size_t> c5{ 3, 4, 0, 5, 6 };
-static const vector<size_t> c6{ 3, 4, 5, 6, 7, 8 };
-static const vector<size_t> c7{ 3, 4, 5, 6, 7, 8, 9 };
-static const vector<size_t> c8{ 3, 4, 10, 5, 6, 7, 8, 9 };
-static const vector<size_t> c9{ 3, 4, 11, 12, 0, 5, 6, 13, 14 };
-static const vector<size_t> c10{ 3, 4, 11, 12, 15, 5, 6, 13, 14, 16 };
-static const vector<size_t> jack{ 3, 4, 10, 11, 12, 0, 5, 6, 9, 13, 14 };
-static const vector<size_t> queen{ 1, 3, 4, 10, 11, 12, 2, 5, 6, 9, 13, 14 };
-static const vector<size_t> king{ 1, 3, 4, 10, 11, 12, 0, 2, 5, 6, 9, 13, 14 };
-
-static const vector<vector<size_t> > patterns{ corners, ace, c2, c3, c4, c5, c6, c7, c8, c9, c10, jack, queen, king };
-
-
-
-/**
  * Generate the string for drawing the pips on the card. This is a two pass
  * process. The second pass is after the card image has been rotated.
  *
@@ -172,14 +104,21 @@ static const vector<vector<size_t> > patterns{ corners, ace, c2, c3, c4, c5, c6,
  */
 static string drawStandardPips(bool rotate, size_t card, desc & pipD)
 {
-    stringstream outputString{};
+    PatternCollection patterns{};
+    if (!patterns.isIndex(card))
+        return "";
 
-    for (size_t pattern : patterns[card])
+    Pattern pattern{patterns.getPattern(card)};
+    const float x{standardPipInfo.getX()};
+    const float y{standardPipInfo.getY()};
+
+    stringstream outputString{};
+    for (auto location : pattern)
     {
-        if (getRotate(pattern) == rotate)
+        if (location.isRotate() == rotate)
         {
-            const float offX = standardPipInfo.getX() + (getXOffset(pattern) * viewportWindowX);
-            const float offY = standardPipInfo.getY() + (getYOffset(pattern) * viewportWindowY);
+            const float offX{x + (location.getX() * viewportWindowX)};
+            const float offY{y + (location.getY() * viewportWindowY)};
 
             pipD.reposition(offX, offY);
             outputString  << pipD.draw();
