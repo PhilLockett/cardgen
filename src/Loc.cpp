@@ -23,7 +23,6 @@
  * Constants for drawStandardPips().
  */
 
-#include <algorithm>
 #include <iterator>
 
 #include "Loc.h"
@@ -70,12 +69,21 @@ const Pattern::Container Pattern::locations{
 
 Pattern::Pattern(const std::vector<Index> & v)
 {
-    std::transform(v.cbegin(), v.cend(), std::back_inserter(indices),
-        [](Index i) { return getSafeLoc(i); });
-
-    auto invalid = std::find_if(std::begin(v), std::end(v), 
-        [](Index i) { return isIndex(i); });
-    valid = (invalid == std::end(v));
+    valid = true;
+    for (auto index : v)
+    {
+        if (isIndex(index))
+        {
+            const auto & location{locations.at(index)};
+            if (location.isRotate())
+                southern.push_back(location);
+            else
+                northern.push_back(location);
+        }
+        else
+            valid = false;
+    }
+    rotate = true;
 }
 
 static const Pattern corners{{ 3, 5 }};

@@ -108,21 +108,19 @@ static string drawStandardPips(bool rotate, size_t card, desc & pipD)
     if (!patterns.isIndex(card))
         return "";
 
-    Pattern pattern{patterns.getPattern(card)};
     const float x{standardPipInfo.getX()};
     const float y{standardPipInfo.getY()};
+    Pattern pattern{patterns.getPattern(card)};
+    pattern.setRotate(rotate);
 
     stringstream outputString{};
     for (auto location : pattern)
     {
-        if (location.isRotate() == rotate)
-        {
-            const float offX{x + (location.getX() * viewportWindowX)};
-            const float offY{y + (location.getY() * viewportWindowY)};
+        const float offX{x + (location.getX() * viewportWindowX)};
+        const float offY{y + (location.getY() * viewportWindowY)};
 
-            pipD.reposition(offX, offY);
-            outputString  << pipD.draw();
-        }
+        pipD.reposition(offX, offY);
+        outputString  << pipD.draw();
     }
 
     return outputString.str();

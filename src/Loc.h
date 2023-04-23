@@ -66,8 +66,10 @@ public:
 private:
     static const Container locations;
 
-    Container indices;
+    Container northern;
+    Container southern;
     bool      valid;
+    bool      rotate;
 
     static const Loc & getSafeLoc(Index loc)
         { return isIndex(loc) ? locations.at(loc) : locations.at(0); }
@@ -75,12 +77,15 @@ private:
 public:
     Pattern(const std::vector<Index> & v);
 
-    const Iterator begin(void) const { return indices.begin(); }
-    const Iterator end(void) const { return indices.end(); }
+    const Iterator begin(void) const { return rotate ? southern.begin() : northern.begin(); }
+    const Iterator end(void) const { return rotate ? southern.end() : northern.end(); }
 
     static bool isIndex(Index index) { return index < locations.size(); }
     const Loc & getLocation(Index loc) { return getSafeLoc(loc); }
+    bool isRotate(void) const { return rotate; }
     bool isValid(void) const { return valid; }
+
+    void setRotate(bool state) { rotate = state; }
 
 };
 
