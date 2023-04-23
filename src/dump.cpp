@@ -99,7 +99,7 @@ static void genEndString(ofstream & file, const std::string & fileName)
  *
  * @param  rotate - Rotated on first pass.
  * @param  card - 1 to 13 (ace to king).
- * @param  fileName - name of image file for the pip.
+ * @param  pipD - standard pip descriptor.
  * @return the generated string.
  */
 static string drawStandardPips(bool rotate, size_t card, desc & pipD)
