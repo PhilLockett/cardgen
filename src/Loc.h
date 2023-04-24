@@ -42,8 +42,8 @@ private:
 
     const Offset    xIndex;
     const Offset    yIndex;
+    // const bool      valid;
     const bool      rotate;
-    const bool      valid;
 
     static bool isIndex(Index index) { return index < offsets.size(); }
 
@@ -53,7 +53,7 @@ public:
     Offset getX(void) const { return xIndex; }
     Offset getY(void) const { return yIndex; }
     bool isRotate(void) const { return rotate; }
-    bool isValid(void) const { return valid; }
+    // bool isValid(void) const { return valid; }
 
 };
 
@@ -67,11 +67,11 @@ public:
 	using Iterator = Pairs::const_iterator;
 
 private:
-    static const Container locations;
+    static std::vector<Loc> locations;
 
     Pairs   northern;
     Pairs   southern;
-    bool    valid;
+    // bool    valid;
     bool    rotate;
 
     static const Loc & getSafeLoc(Index loc)
@@ -79,6 +79,7 @@ private:
 
 public:
     Pattern(const std::vector<Index> & v);
+    static void init(void);
 
     const Iterator begin(void) const { return rotate ? southern.begin() : northern.begin(); }
     const Iterator end(void) const { return rotate ? southern.end() : northern.end(); }
@@ -86,7 +87,7 @@ public:
     static bool isIndex(Index index) { return index < locations.size(); }
 
     bool isRotate(void) const { return rotate; }
-    bool isValid(void) const { return valid; }
+    // bool isValid(void) const { return valid; }
 
     void setRotate(bool state) { rotate = state; }
 
@@ -99,16 +100,20 @@ public:
 	using Container = std::vector<Pattern>;
 
 private:
-    static const Container patterns;
+    static Container patterns;
+    static bool initialised;
 
     static const Pattern & getSafePat(Index pat)
         { return isIndex(pat) ? patterns.at(pat) : patterns.at(0); }
 
+    static void init(void);
+    static void check(void) { if (!initialised) { initialised = true; init(); } }
+
 public:
     PatternCollection(void) { }
 
-    static bool isIndex(Index index) { return index < patterns.size(); }
-    static const Pattern & getPattern(Index pat) { return getSafePat(pat); }
+    static bool isIndex(Index index) { check(); return index < patterns.size(); }
+    static const Pattern & getPattern(Index pat) { check(); return getSafePat(pat); }
 
 };
 

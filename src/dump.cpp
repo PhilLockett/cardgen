@@ -115,8 +115,8 @@ static string drawStandardPips(bool rotate, size_t card, desc & pipD)
     stringstream outputString{};
     for (auto [xOffset, yOffset] : pattern)
     {
-        const float offX{x + (xOffset * viewportWindowX)};
-        const float offY{y + (yOffset * viewportWindowY)};
+        const float offX{x + xOffset};
+        const float offY{y + yOffset};
 
         pipD.reposition(offX, offY);
         outputString  << pipD.draw();

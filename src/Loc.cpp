@@ -23,30 +23,25 @@
  * Constants for drawStandardPips().
  */
 
+#include <iostream>
 #include <iterator>
 
 #include "Loc.h"
+#include "cardgen.h"
 
+#if !defined ELEMENTS
+#define ELEMENTS(A) (sizeof(A)/sizeof(A[0]))
+#endif
 
-const Loc::Container Loc::offsets{
-    (1.0F / 2),
-    (0.0F),
-    (1.0F),
-    (1.0F / 4),
-    (1.0F / 3),
-    (1.0F / 6)
+static const struct
+{
+    size_t  xIndex;
+    size_t  yIndex;
+    bool    rotate;
 
-};
-
-Loc::Loc(size_t x, size_t y, bool r) : 
-    xIndex{isIndex(x) ? offsets[x] : 0},
-    yIndex{isIndex(y) ? offsets[y] : 0},
-    rotate{r},
-    valid{isIndex(x) && isIndex(y)}
-{ }
-
-
-const Pattern::Container Pattern::locations{
+}
+    loc[] =
+{
     { 0, 0, false },
     { 0, 1, true },
     { 0, 1, false },
@@ -67,9 +62,54 @@ const Pattern::Container Pattern::locations{
 
 };
 
+static const std::vector<size_t> corners{ 3, 5 };
+static const std::vector<size_t> ace{ 0 };
+static const std::vector<size_t> c2{ 1, 2 };
+static const std::vector<size_t> c3{ 1, 0, 2 };
+static const std::vector<size_t> c4{ 3, 4, 5, 6 };
+static const std::vector<size_t> c5{ 3, 4, 0, 5, 6 };
+static const std::vector<size_t> c6{ 3, 4, 5, 6, 7, 8 };
+static const std::vector<size_t> c7{ 3, 4, 5, 6, 7, 8, 9 };
+static const std::vector<size_t> c8{ 3, 4, 10, 5, 6, 7, 8, 9 };
+static const std::vector<size_t> c9{ 3, 4, 11, 12, 0, 5, 6, 13, 14 };
+static const std::vector<size_t> c10{ 3, 4, 11, 12, 15, 5, 6, 13, 14, 16 };
+static const std::vector<size_t> jack{ 3, 4, 10, 11, 12, 0, 5, 6, 9, 13, 14 };
+static const std::vector<size_t> queen{ 1, 3, 4, 10, 11, 12, 2, 5, 6, 9, 13, 14 };
+static const std::vector<size_t> king{ 1, 3, 4, 10, 11, 12, 0, 2, 5, 6, 9, 13, 14 };
+
+static const std::vector<std::vector<size_t>> _patterns{
+    corners, ace, c2, c3, c4, c5, c6, c7, c8, c9, c10, jack, queen, king
+};
+
+const Loc::Container Loc::offsets{
+    (1.0F / 2),
+    (0.0F),
+    (1.0F),
+    (1.0F / 4),
+    (1.0F / 3),
+    (1.0F / 6)
+
+};
+
+Loc::Loc(size_t x, size_t y, bool r) : 
+    xIndex{isIndex(x) ? offsets[x] * viewportWindowX : 0},
+    yIndex{isIndex(y) ? offsets[y] * viewportWindowY : 0},
+    // valid{isIndex(x) && isIndex(y)},
+    rotate{r}
+{ }
+
+
+std::vector<Loc> Pattern::locations{};
+
+void Pattern::init(void)
+{
+    const size_t MAX{ELEMENTS(loc)};
+    for (int i{}; i < MAX; ++i)
+        locations.emplace_back(loc[i].xIndex, loc[i].yIndex, loc[i].rotate);
+}
+
 Pattern::Pattern(const std::vector<Index> & v)
 {
-    valid = true;
     for (auto index : v)
     {
         if (isIndex(index))
@@ -81,27 +121,22 @@ Pattern::Pattern(const std::vector<Index> & v)
                 northern.emplace_back(location.getX(), location.getY());
         }
         else
-            valid = false;
+        {
+            // valid = false;
+        }
     }
     rotate = true;
 }
 
-static const Pattern corners{{ 3, 5 }};
-static const Pattern ace{{ 0 }};
-static const Pattern c2{{ 1, 2 }};
-static const Pattern c3{{ 1, 0, 2 }};
-static const Pattern c4{{ 3, 4, 5, 6 }};
-static const Pattern c5{{ 3, 4, 0, 5, 6 }};
-static const Pattern c6{{ 3, 4, 5, 6, 7, 8 }};
-static const Pattern c7{{ 3, 4, 5, 6, 7, 8, 9 }};
-static const Pattern c8{{ 3, 4, 10, 5, 6, 7, 8, 9 }};
-static const Pattern c9{{ 3, 4, 11, 12, 0, 5, 6, 13, 14 }};
-static const Pattern c10{{ 3, 4, 11, 12, 15, 5, 6, 13, 14, 16 }};
-static const Pattern jack{{ 3, 4, 10, 11, 12, 0, 5, 6, 9, 13, 14 }};
-static const Pattern queen{{ 1, 3, 4, 10, 11, 12, 2, 5, 6, 9, 13, 14 }};
-static const Pattern king{{ 1, 3, 4, 10, 11, 12, 0, 2, 5, 6, 9, 13, 14 }};
+PatternCollection::Container PatternCollection::patterns{};
+bool PatternCollection::initialised{};
 
-const PatternCollection::Container PatternCollection::patterns{
-    corners, ace, c2, c3, c4, c5, c6, c7, c8, c9, c10, jack, queen, king
-};
+void PatternCollection::init(void)
+{
+    Pattern::init();
+
+    const size_t MAX{_patterns.size()};
+    for (auto pattern : _patterns)
+        patterns.emplace_back(pattern);
+}
 
