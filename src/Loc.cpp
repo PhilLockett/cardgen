@@ -76,9 +76,9 @@ Pattern::Pattern(const std::vector<Index> & v)
         {
             const auto & location{locations.at(index)};
             if (location.isRotate())
-                southern.push_back(location);
+                southern.emplace_back(location.getX(), location.getY());
             else
-                northern.push_back(location);
+                northern.emplace_back(location.getX(), location.getY());
         }
         else
             valid = false;

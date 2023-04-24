@@ -27,6 +27,7 @@
 #define _LOC_H_INCLUDED_
 
 #include <vector>
+#include <tuple>
 
 
 class Loc
@@ -61,15 +62,17 @@ class Pattern
 public:
 	using Index = size_t;
 	using Container = std::vector<Loc>;
-	using Iterator = Container::const_iterator;
+	using Pair = std::pair<Loc::Offset, Loc::Offset>;
+	using Pairs = std::vector<Pair>;
+	using Iterator = Pairs::const_iterator;
 
 private:
     static const Container locations;
 
-    Container northern;
-    Container southern;
-    bool      valid;
-    bool      rotate;
+    Pairs   northern;
+    Pairs   southern;
+    bool    valid;
+    bool    rotate;
 
     static const Loc & getSafeLoc(Index loc)
         { return isIndex(loc) ? locations.at(loc) : locations.at(0); }

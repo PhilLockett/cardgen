@@ -114,10 +114,10 @@ static string drawStandardPips(bool rotate, size_t card, desc & pipD)
     pattern.setRotate(rotate);
 
     stringstream outputString{};
-    for (auto location : pattern)
+    for (auto [xOffset, yOffset] : pattern)
     {
-        const float offX{x + (location.getX() * viewportWindowX)};
-        const float offY{y + (location.getY() * viewportWindowY)};
+        const float offX{x + (xOffset * viewportWindowX)};
+        const float offY{y + (yOffset * viewportWindowY)};
 
         pipD.reposition(offX, offY);
         outputString  << pipD.draw();
