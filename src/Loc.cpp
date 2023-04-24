@@ -94,7 +94,6 @@ const Loc::Container Loc::offsets{
 Loc::Loc(size_t x, size_t y, bool r) : 
     xIndex{isIndex(x) ? offsets[x] * viewportWindowX : 0},
     yIndex{isIndex(y) ? offsets[y] * viewportWindowY : 0},
-    // valid{isIndex(x) && isIndex(y)},
     rotate{r}
 { }
 
@@ -119,10 +118,6 @@ Pattern::Pattern(const std::vector<Index> & v)
                 southern.emplace_back(location.getX(), location.getY());
             else
                 northern.emplace_back(location.getX(), location.getY());
-        }
-        else
-        {
-            // valid = false;
         }
     }
     rotate = true;

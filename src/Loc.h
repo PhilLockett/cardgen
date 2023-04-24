@@ -42,7 +42,6 @@ private:
 
     const Offset    xIndex;
     const Offset    yIndex;
-    // const bool      valid;
     const bool      rotate;
 
     static bool isIndex(Index index) { return index < offsets.size(); }
@@ -53,7 +52,6 @@ public:
     Offset getX(void) const { return xIndex; }
     Offset getY(void) const { return yIndex; }
     bool isRotate(void) const { return rotate; }
-    // bool isValid(void) const { return valid; }
 
 };
 
@@ -71,7 +69,6 @@ private:
 
     Pairs   northern;
     Pairs   southern;
-    // bool    valid;
     bool    rotate;
 
     static const Loc & getSafeLoc(Index loc)
@@ -87,7 +84,6 @@ public:
     static bool isIndex(Index index) { return index < locations.size(); }
 
     bool isRotate(void) const { return rotate; }
-    // bool isValid(void) const { return valid; }
 
     void setRotate(bool state) { rotate = state; }
 
@@ -116,7 +112,6 @@ public:
     static const Pattern & getPattern(Index pat) { check(); return getSafePat(pat); }
 
 };
-
 
 
 #endif //!defined _LOC_H_INCLUDED_
