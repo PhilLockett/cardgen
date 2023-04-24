@@ -84,7 +84,7 @@ public:
     const Iterator end(void) const { return rotate ? southern.end() : northern.end(); }
 
     static bool isIndex(Index index) { return index < locations.size(); }
-    const Loc & getLocation(Index loc) { return getSafeLoc(loc); }
+
     bool isRotate(void) const { return rotate; }
     bool isValid(void) const { return valid; }
 

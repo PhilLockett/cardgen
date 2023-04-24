@@ -102,9 +102,6 @@ static const Pattern queen{{ 1, 3, 4, 10, 11, 12, 2, 5, 6, 9, 13, 14 }};
 static const Pattern king{{ 1, 3, 4, 10, 11, 12, 0, 2, 5, 6, 9, 13, 14 }};
 
 const PatternCollection::Container PatternCollection::patterns{
-    corners,
-    ace, c2, c3, c4, c5, c6, c7, c8, c9, c10,
-    jack, queen, king
-
+    corners, ace, c2, c3, c4, c5, c6, c7, c8, c9, c10, jack, queen, king
 };
 
