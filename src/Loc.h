@@ -108,7 +108,7 @@ public:
     PatternCollection(void) { }
 
     static bool isIndex(Index index) { return index < patterns.size(); }
-    const Pattern & getPattern(Index pat) { return getSafePat(pat); }
+    static const Pattern & getPattern(Index pat) { return getSafePat(pat); }
 
 };
 

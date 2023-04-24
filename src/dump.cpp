@@ -104,13 +104,12 @@ static void genEndString(ofstream & file, const std::string & fileName)
  */
 static string drawStandardPips(bool rotate, size_t card, desc & pipD)
 {
-    PatternCollection patterns{};
-    if (!patterns.isIndex(card))
+    if (!PatternCollection::isIndex(card))
         return "";
 
     const float x{standardPipInfo.getX()};
     const float y{standardPipInfo.getY()};
-    Pattern pattern{patterns.getPattern(card)};
+    Pattern pattern{PatternCollection::getPattern(card)};
     pattern.setRotate(rotate);
 
     stringstream outputString{};
