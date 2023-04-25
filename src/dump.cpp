@@ -128,10 +128,10 @@ static string drawStandardPips(bool rotate, size_t card, desc & pipD)
  * court cards. Numerous internal variables need to be recalculated if the
  * aspect ratio of the image is to be maintained, otherwise the image is
  * stretched to fill the card. Note that this is done for each image because
- * the dimensions can vary.
+ * the dimensions of the image can vary.
  *
  * @param  faceD - Image descriptor.
- * @param  fileName - name of image file for the pip.
+ * @param  fileName - name of image file to use.
  * @return the generated string.
  */
 static string drawImage(const desc & faceD, const string & fileName)
@@ -144,6 +144,7 @@ static string drawImage(const desc & faceD, const string & fileName)
     float scale{1};
     float aspectRatio{};
 
+//- Adjust values based on variables that may have been changed by the user.
     if (faceD.isLandscape())
     {
         if (keepAspectRatio)
@@ -195,7 +196,7 @@ static string drawImage(const desc & faceD, const string & fileName)
     {
         info scaledPip{imagePipInfo};
 
-//- Rescale image pips, but only if they haven't been manually altered.
+        // Rescale image pips, but only if they haven't been manually altered.
         if (!imagePipInfo.isChangedH())
             scaledPip.setH(imagePipScale * imagePipInfo.getH());
 
@@ -205,7 +206,7 @@ static string drawImage(const desc & faceD, const string & fileName)
         if (!imagePipInfo.isChangedY())
             scaledPip.setY(imagePipScale * imagePipInfo.getY());
 
-//- Pip Filename is only supplied for court cards if they need pips adding.
+        // Pip Filename is only supplied for court cards if they need pips adding.
         desc pipD{scaledPip, fileName};
         if (pipD.isFileFound())
         {
@@ -254,9 +255,9 @@ static void drawImageMagickJoker(ofstream & file, const string & fileName)
  *
  * @param  file - output file stream.
  * @param  fileName - name of joker image file being generated.
- * @param  suit - index of suit for the joker being generated.
+ * @param  indexD - joker index descriptor.
  */
-static void drawDefaultJoker(ofstream & file, const string & fileName, int suit)
+static void drawDefaultJoker(ofstream & file, const string & fileName, const desc & indexD)
 {
     const string faceFile{"boneyard/Back.png"};
     const desc faceD(95, 50, 50, faceFile);
@@ -264,8 +265,6 @@ static void drawDefaultJoker(ofstream & file, const string & fileName, int suit)
     file << genStartString();
 
     // Draw "Joker" indices if provided.
-    const string indexFile{"indices/" + indexDirectory + "/" + suits[suit] + "Joker.png"};
-    const desc indexD(indexInfo, indexFile);
     if (indexD.isFileFound())
     {
         file << indexD.draw();
@@ -303,15 +302,13 @@ static int drawJoker(int fails, ofstream & file, int suit)
 
         if (indexD.isFileFound())
         {
-            file << indexD.draw();          // Draw index.
+            file << indexD.draw();
             file << "\t-rotate 180 \\" << endl;
-            file << indexD.draw();          // Draw index.
+            file << indexD.draw();
         }
 
         if (faceD.isFileFound())
-        {
             file << drawImage(faceD, "");
-        }
 
         genEndString(file, fileName);
 
@@ -327,7 +324,7 @@ static int drawJoker(int fails, ofstream & file, int suit)
         break;
 
     default:
-        drawDefaultJoker(file, fileName, suit);
+        drawDefaultJoker(file, fileName, indexD);
         break;
     }
 
@@ -447,18 +444,16 @@ int generateScript(int argc, char *argv[])
             file << startString;
 
             if ((faceD.useStandardPips()) || (faceD.isFileFound() && faceD.isLandscape()))
-            {
                 file << drawFace;			// Draw either half of the pips or one of the landscape images.
-            }
+
             file << pipD.draw();			// Draw corner pip.
             file << indexD.draw();			// Draw index.
 
             file << "\t-rotate 180 \\" << endl;
 
             if (faceD.useStandardPips())
-            {
                 drawFace = drawStandardPips(false, c, standardPipD);
-            }
+
             file << drawFace;				// Draw either the rest of the pips or the needed image.
             file << pipD.draw();			// Draw corner pip.
             file << indexD.draw();			// Draw index.
