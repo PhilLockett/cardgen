@@ -27,7 +27,6 @@
 #include <iterator>
 
 #include "Loc.h"
-#include "cardgen.h"
 
 #if !defined ELEMENTS
 #define ELEMENTS(A) (sizeof(A)/sizeof(A[0]))
@@ -91,7 +90,7 @@ const Loc::Container Loc::offsets{
 
 };
 
-Loc::Loc(size_t x, size_t y, bool r) : 
+Loc::Loc(size_t x, size_t y, bool r, float viewportWindowX, float viewportWindowY) : 
     xIndex{isIndex(x) ? offsets[x] * viewportWindowX : 0},
     yIndex{isIndex(y) ? offsets[y] * viewportWindowY : 0},
     rotate{r}
@@ -100,11 +99,12 @@ Loc::Loc(size_t x, size_t y, bool r) :
 
 std::vector<Loc> Pattern::locations{};
 
-void Pattern::init(void)
+void Pattern::init(float viewportWindowX, float viewportWindowY)
 {
     const size_t MAX{ELEMENTS(loc)};
+    locations.clear();
     for (int i{}; i < MAX; ++i)
-        locations.emplace_back(loc[i].xIndex, loc[i].yIndex, loc[i].rotate);
+        locations.emplace_back(loc[i].xIndex, loc[i].yIndex, loc[i].rotate, viewportWindowX, viewportWindowY);
 }
 
 Pattern::Pattern(const std::vector<Index> & v)
@@ -124,14 +124,18 @@ Pattern::Pattern(const std::vector<Index> & v)
 }
 
 PatternCollection::Container PatternCollection::patterns{};
-bool PatternCollection::initialised{};
 
 void PatternCollection::init(void)
 {
-    Pattern::init();
-
     const size_t MAX{_patterns.size()};
+    patterns.clear();
     for (auto pattern : _patterns)
         patterns.emplace_back(pattern);
+}
+
+void PatternCollection::calibrate(float viewportWindowX, float viewportWindowY)
+{
+    Pattern::init(viewportWindowX, viewportWindowY);
+    PatternCollection::init();
 }
 

@@ -29,6 +29,7 @@
 
 #include "cardgen.h"
 #include "config.h"
+#include "Loc.h"
 
 #include <iostream>
 
@@ -250,6 +251,8 @@ void recalculate(void)
 //- If "outputDirectory" isn't explicitly set, use "face".
     if (!outputDirectory.length())
         outputDirectory = faceDirectory;
+
+    PatternCollection::calibrate(viewportWindowX, viewportWindowY);
 }
 
 

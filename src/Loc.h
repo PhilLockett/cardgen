@@ -47,7 +47,7 @@ private:
     static bool isIndex(Index index) { return index < offsets.size(); }
 
 public:
-    Loc(size_t x, size_t y, bool r);
+    Loc(size_t x, size_t y, bool r, float viewportWindowX, float viewportWindowY);
 
     Offset getX(void) const { return xIndex; }
     Offset getY(void) const { return yIndex; }
@@ -76,7 +76,7 @@ private:
 
 public:
     Pattern(const std::vector<Index> & v);
-    static void init(void);
+    static void init(float viewportWindowX, float viewportWindowY);
 
     const Iterator begin(void) const { return rotate ? southern.begin() : northern.begin(); }
     const Iterator end(void) const { return rotate ? southern.end() : northern.end(); }
@@ -97,19 +97,19 @@ public:
 
 private:
     static Container patterns;
-    static bool initialised;
 
     static const Pattern & getSafePat(Index pat)
         { return isIndex(pat) ? patterns.at(pat) : patterns.at(0); }
 
     static void init(void);
-    static void check(void) { if (!initialised) { initialised = true; init(); } }
 
 public:
     PatternCollection(void) { }
 
-    static bool isIndex(Index index) { check(); return index < patterns.size(); }
-    static const Pattern & getPattern(Index pat) { check(); return getSafePat(pat); }
+    static void calibrate(float viewportWindowX, float viewportWindowY);
+
+    static bool isIndex(Index index) { return index < patterns.size(); }
+    static const Pattern & getPattern(Index pat) { return getSafePat(pat); }
 
 };
 
