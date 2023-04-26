@@ -28,15 +28,26 @@
 
 #include "Loc.h"
 
-struct Loc_s
-{
-    size_t  xIndex;
-    size_t  yIndex;
-    bool    rotate;
+
+const Loc::Container Loc::offsets{
+    (1.0F / 2),
+    (0.0F),
+    (1.0F),
+    (1.0F / 4),
+    (1.0F / 3),
+    (1.0F / 6)
 
 };
 
-static const std::vector<Loc_s> loc{
+Loc::Loc(size_t x, size_t y, bool r, float viewportWindowX, float viewportWindowY) : 
+    xIndex{isIndex(x) ? offsets[x] * viewportWindowX : 0},
+    yIndex{isIndex(y) ? offsets[y] * viewportWindowY : 0},
+    rotate{r}
+{ }
+
+
+
+const std::vector<Loc_s> Pattern::locs{
     { 0, 0, false },
     { 0, 1, true },
     { 0, 1, false },
@@ -57,49 +68,13 @@ static const std::vector<Loc_s> loc{
 
 };
 
-static const std::vector<std::vector<size_t>> _patterns{
-    { 3, 5 },
-    { 0 },
-    { 1, 2 },
-    { 1, 0, 2 },
-    { 3, 4, 5, 6 },
-    { 3, 4, 0, 5, 6 },
-    { 3, 4, 5, 6, 7, 8 },
-    { 3, 4, 5, 6, 7, 8, 9 },
-    { 3, 4, 10, 5, 6, 7, 8, 9 },
-    { 3, 4, 11, 12, 0, 5, 6, 13, 14 },
-    { 3, 4, 11, 12, 15, 5, 6, 13, 14, 16 },
-    { 3, 4, 10, 11, 12, 0, 5, 6, 9, 13, 14 },
-    { 1, 3, 4, 10, 11, 12, 2, 5, 6, 9, 13, 14 },
-    { 1, 3, 4, 10, 11, 12, 0, 2, 5, 6, 9, 13, 14 },
-
-};
-
-
-const Loc::Container Loc::offsets{
-    (1.0F / 2),
-    (0.0F),
-    (1.0F),
-    (1.0F / 4),
-    (1.0F / 3),
-    (1.0F / 6)
-
-};
-
-Loc::Loc(size_t x, size_t y, bool r, float viewportWindowX, float viewportWindowY) : 
-    xIndex{isIndex(x) ? offsets[x] * viewportWindowX : 0},
-    yIndex{isIndex(y) ? offsets[y] * viewportWindowY : 0},
-    rotate{r}
-{ }
-
-
 std::vector<Loc> Pattern::locations{};
 
 void Pattern::init(float viewportWindowX, float viewportWindowY)
 {
     locations.clear();
-    for (const Loc_s & l : loc)
-        locations.emplace_back(l.xIndex, l.yIndex, l.rotate, viewportWindowX, viewportWindowY);
+    for (const Loc_s & loc : locs)
+        locations.emplace_back(loc.xIndex, loc.yIndex, loc.rotate, viewportWindowX, viewportWindowY);
 }
 
 Pattern::Pattern(const std::vector<Index> & v)
@@ -119,13 +94,32 @@ Pattern::Pattern(const std::vector<Index> & v)
 }
 
 
+
+const std::vector<std::vector<size_t>> PatternCollection::pats{
+    { 3, 5 },
+    { 0 },
+    { 1, 2 },
+    { 1, 0, 2 },
+    { 3, 4, 5, 6 },
+    { 3, 4, 0, 5, 6 },
+    { 3, 4, 5, 6, 7, 8 },
+    { 3, 4, 5, 6, 7, 8, 9 },
+    { 3, 4, 10, 5, 6, 7, 8, 9 },
+    { 3, 4, 11, 12, 0, 5, 6, 13, 14 },
+    { 3, 4, 11, 12, 15, 5, 6, 13, 14, 16 },
+    { 3, 4, 10, 11, 12, 0, 5, 6, 9, 13, 14 },
+    { 1, 3, 4, 10, 11, 12, 2, 5, 6, 9, 13, 14 },
+    { 1, 3, 4, 10, 11, 12, 0, 2, 5, 6, 9, 13, 14 },
+
+};
+
 PatternCollection::Container PatternCollection::patterns{};
 
 void PatternCollection::init(void)
 {
-    const size_t MAX{_patterns.size()};
+    const size_t MAX{pats.size()};
     patterns.clear();
-    for (auto pattern : _patterns)
+    for (auto pattern : pats)
         patterns.emplace_back(pattern);
 }
 

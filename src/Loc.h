@@ -55,6 +55,14 @@ public:
 
 };
 
+struct Loc_s
+{
+    size_t  xIndex;
+    size_t  yIndex;
+    bool    rotate;
+
+};
+
 class Pattern
 {
 public:
@@ -65,6 +73,7 @@ public:
 	using Iterator = Pairs::const_iterator;
 
 private:
+    static const std::vector<Loc_s> locs;
     static std::vector<Loc> locations;
 
     Pairs   northern;
@@ -96,6 +105,7 @@ public:
 	using Container = std::vector<Pattern>;
 
 private:
+    static const std::vector<std::vector<size_t>> pats;
     static Container patterns;
 
     static const Pattern & getSafePat(Index pat)
