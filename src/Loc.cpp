@@ -39,10 +39,10 @@ const Loc::Container Loc::offsets{
 
 };
 
-Loc::Loc(size_t x, size_t y, bool r, float viewportWindowX, float viewportWindowY) : 
-    xIndex{isIndex(x) ? offsets[x] * viewportWindowX : 0},
-    yIndex{isIndex(y) ? offsets[y] * viewportWindowY : 0},
-    rotate{r}
+Loc::Loc(const Loc_s & loc, float viewportWindowX, float viewportWindowY) : 
+    xIndex{isIndex(loc.xIndex) ? offsets[loc.xIndex] * viewportWindowX : 0},
+    yIndex{isIndex(loc.yIndex) ? offsets[loc.yIndex] * viewportWindowY : 0},
+    rotate{loc.rotate}
 { }
 
 
@@ -74,7 +74,7 @@ void Pattern::init(float viewportWindowX, float viewportWindowY)
 {
     locations.clear();
     for (const Loc_s & loc : locs)
-        locations.emplace_back(loc.xIndex, loc.yIndex, loc.rotate, viewportWindowX, viewportWindowY);
+        locations.emplace_back(loc, viewportWindowX, viewportWindowY);
 }
 
 Pattern::Pattern(const std::vector<Index> & v)

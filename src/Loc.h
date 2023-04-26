@@ -30,6 +30,14 @@
 #include <tuple>
 
 
+struct Loc_s
+{
+    const size_t  xIndex;
+    const size_t  yIndex;
+    const bool    rotate;
+
+};
+
 class Loc
 {
 public:
@@ -47,7 +55,7 @@ private:
     static bool isIndex(Index index) { return index < offsets.size(); }
 
 public:
-    Loc(size_t x, size_t y, bool r, float viewportWindowX, float viewportWindowY);
+    Loc(const Loc_s & loc, float viewportWindowX, float viewportWindowY);
 
     Offset getX(void) const { return xIndex; }
     Offset getY(void) const { return yIndex; }
@@ -55,13 +63,7 @@ public:
 
 };
 
-struct Loc_s
-{
-    size_t  xIndex;
-    size_t  yIndex;
-    bool    rotate;
 
-};
 
 class Pattern
 {
