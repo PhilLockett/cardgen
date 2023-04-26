@@ -30,6 +30,11 @@
 #include <tuple>
 
 
+/**
+ * @section Loc class code.
+ *
+ */
+
 struct Loc_s
 {
     const size_t  xIndex;
@@ -64,6 +69,10 @@ public:
 };
 
 
+/**
+ * @section Pattern class code.
+ *
+ */
 
 class Pattern
 {
@@ -99,6 +108,12 @@ public:
     void setRotate(bool state) { rotate = state; }
 
 };
+
+
+/**
+ * @section PatternCollection class code.
+ *
+ */
 
 class PatternCollection
 {

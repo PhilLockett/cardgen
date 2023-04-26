@@ -29,6 +29,11 @@
 #include "Loc.h"
 
 
+/**
+ * @section Loc class method code.
+ *
+ */
+
 const Loc::Container Loc::offsets{
     (1.0F / 2),
     (0.0F),
@@ -46,6 +51,10 @@ Loc::Loc(const Loc_s & loc, float viewportWindowX, float viewportWindowY) :
 { }
 
 
+/**
+ * @section Pattern class method code.
+ *
+ */
 
 const std::vector<Loc_s> Pattern::locs{
     { 0, 0, false },
@@ -94,6 +103,10 @@ Pattern::Pattern(const std::vector<Index> & v)
 }
 
 
+/**
+ * @section PatternCollection class method code.
+ *
+ */
 
 const std::vector<std::vector<size_t>> PatternCollection::pats{
     { 3, 5 },
