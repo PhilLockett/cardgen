@@ -28,19 +28,15 @@
 
 #include "Loc.h"
 
-#if !defined ELEMENTS
-#define ELEMENTS(A) (sizeof(A)/sizeof(A[0]))
-#endif
-
-static const struct
+struct Loc_s
 {
     size_t  xIndex;
     size_t  yIndex;
     bool    rotate;
 
-}
-    loc[] =
-{
+};
+
+static const std::vector<Loc_s> loc{
     { 0, 0, false },
     { 0, 1, true },
     { 0, 1, false },
@@ -61,24 +57,24 @@ static const struct
 
 };
 
-static const std::vector<size_t> corners{ 3, 5 };
-static const std::vector<size_t> ace{ 0 };
-static const std::vector<size_t> c2{ 1, 2 };
-static const std::vector<size_t> c3{ 1, 0, 2 };
-static const std::vector<size_t> c4{ 3, 4, 5, 6 };
-static const std::vector<size_t> c5{ 3, 4, 0, 5, 6 };
-static const std::vector<size_t> c6{ 3, 4, 5, 6, 7, 8 };
-static const std::vector<size_t> c7{ 3, 4, 5, 6, 7, 8, 9 };
-static const std::vector<size_t> c8{ 3, 4, 10, 5, 6, 7, 8, 9 };
-static const std::vector<size_t> c9{ 3, 4, 11, 12, 0, 5, 6, 13, 14 };
-static const std::vector<size_t> c10{ 3, 4, 11, 12, 15, 5, 6, 13, 14, 16 };
-static const std::vector<size_t> jack{ 3, 4, 10, 11, 12, 0, 5, 6, 9, 13, 14 };
-static const std::vector<size_t> queen{ 1, 3, 4, 10, 11, 12, 2, 5, 6, 9, 13, 14 };
-static const std::vector<size_t> king{ 1, 3, 4, 10, 11, 12, 0, 2, 5, 6, 9, 13, 14 };
-
 static const std::vector<std::vector<size_t>> _patterns{
-    corners, ace, c2, c3, c4, c5, c6, c7, c8, c9, c10, jack, queen, king
+    { 3, 5 },
+    { 0 },
+    { 1, 2 },
+    { 1, 0, 2 },
+    { 3, 4, 5, 6 },
+    { 3, 4, 0, 5, 6 },
+    { 3, 4, 5, 6, 7, 8 },
+    { 3, 4, 5, 6, 7, 8, 9 },
+    { 3, 4, 10, 5, 6, 7, 8, 9 },
+    { 3, 4, 11, 12, 0, 5, 6, 13, 14 },
+    { 3, 4, 11, 12, 15, 5, 6, 13, 14, 16 },
+    { 3, 4, 10, 11, 12, 0, 5, 6, 9, 13, 14 },
+    { 1, 3, 4, 10, 11, 12, 2, 5, 6, 9, 13, 14 },
+    { 1, 3, 4, 10, 11, 12, 0, 2, 5, 6, 9, 13, 14 },
+
 };
+
 
 const Loc::Container Loc::offsets{
     (1.0F / 2),
@@ -101,10 +97,9 @@ std::vector<Loc> Pattern::locations{};
 
 void Pattern::init(float viewportWindowX, float viewportWindowY)
 {
-    const size_t MAX{ELEMENTS(loc)};
     locations.clear();
-    for (int i{}; i < MAX; ++i)
-        locations.emplace_back(loc[i].xIndex, loc[i].yIndex, loc[i].rotate, viewportWindowX, viewportWindowY);
+    for (const Loc_s & l : loc)
+        locations.emplace_back(l.xIndex, l.yIndex, l.rotate, viewportWindowX, viewportWindowY);
 }
 
 Pattern::Pattern(const std::vector<Index> & v)
@@ -122,6 +117,7 @@ Pattern::Pattern(const std::vector<Index> & v)
     }
     rotate = true;
 }
+
 
 PatternCollection::Container PatternCollection::patterns{};
 
