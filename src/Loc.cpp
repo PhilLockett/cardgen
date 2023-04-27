@@ -130,7 +130,6 @@ PatternCollection::Container PatternCollection::patterns{};
 
 void PatternCollection::init(void)
 {
-    const size_t MAX{pats.size()};
     patterns.clear();
     for (auto pattern : pats)
         patterns.emplace_back(pattern);
