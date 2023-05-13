@@ -64,6 +64,7 @@ extern bool mpc;
 const int mpcWidth{750};
 const int mpcHeight{1050};
 const int mpcBorder{36};
+extern bool quad;
 
 extern float cornerRadius;
 extern int radius;
@@ -89,6 +90,8 @@ extern int imageOffsetYPx;
 extern float imagePipScale;
 extern float imageX;
 extern float imageY;
+
+extern bool debug;
 
 
 /**

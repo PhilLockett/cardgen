@@ -112,8 +112,17 @@ int desc::getImageSize(void)
     }
 
     stringstream outputString{};
-    outputString  << "\t-draw \"image over " << portOriginXPx + cardBorderPx << ',' << portOriginYPx + cardBorderPx << ' ' << ROUND(portWidthPx) << ',' << ROUND(portHeightPx) << " '" << FileName << "'\" \\" << endl;
+    int x{portOriginXPx + cardBorderPx};
+    const int y{portOriginXPx + cardBorderPx};
+    const int w{ROUND(portWidthPx)};
+    const int h{ROUND(portHeightPx)};
+    outputString << "\t-draw \"image over " << x << ',' << y << ' ' << w << ',' << h << " '" << FileName << "'\" \\" << endl;
     DrawString = outputString.str();
+
+    outputString.str(std::string());
+    x = cardWidthPx - portOriginXPx - w + cardBorderPx;
+    outputString << "\t-draw \"image over " << x << ',' << y << ' ' << w << ',' << h << " '" << FileName << "'\" \\" << endl;
+    WardString = outputString.str();
 
     return 0;
 }

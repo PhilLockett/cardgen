@@ -52,6 +52,7 @@ string outputDirectory{};
 
 bool keepAspectRatio{};
 bool mpc{};
+bool quad{};
 
 float cornerRadius{3.76};
 int radius{};
@@ -77,6 +78,8 @@ int imageOffsetYPx{};
 float imagePipScale{};
 float imageX{};
 float imageY{};
+
+bool debug{};
 
 
 /**

@@ -446,8 +446,13 @@ int generateScript(int argc, char *argv[])
             if ((faceD.useStandardPips()) || (faceD.isFileFound() && faceD.isLandscape()))
                 file << drawFace;			// Draw either half of the pips or one of the landscape images.
 
-            file << pipD.draw();			// Draw corner pip.
-            file << indexD.draw();			// Draw index.
+            file << pipD.draw();            // Draw corner pip.
+            file << indexD.draw();          // Draw index.
+            if (quad)
+            {
+                file << pipD.ward();        // Draw right-hand corner pip.
+                file << indexD.ward();      // Draw right-hand index.
+            }
 
             file << "\t-rotate 180 \\" << endl;
 
@@ -455,8 +460,13 @@ int generateScript(int argc, char *argv[])
                 drawFace = drawStandardPips(false, c, standardPipD);
 
             file << drawFace;				// Draw either the rest of the pips or the needed image.
-            file << pipD.draw();			// Draw corner pip.
-            file << indexD.draw();			// Draw index.
+            file << pipD.draw();            // Draw corner pip.
+            file << indexD.draw();          // Draw index.
+            if (quad)
+            {
+                file << pipD.ward();        // Draw right-hand corner pip.
+                file << indexD.ward();      // Draw right-hand index.
+            }
 
             genEndString(file, fileName);
         }

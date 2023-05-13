@@ -57,6 +57,7 @@ static void help(void)
     cout << "\t-c --colour name \t\tBackground colour name (defined at: http://www.imagemagick.org/script/color.php, default: \"" << cardColour << "\")." << endl;
     cout << "\t-a --KeepAspectRatio \t\tKeep image Aspect Ratio (default: " << (keepAspectRatio ? "true" : "false") << ")." << endl;
     cout << "\t-m --MPC \t\t\tGenerate MakePlayingCards image (default: " << (mpc ? "true" : "false") << ", see: https://www.makeplayingcards.com/)." << endl;
+    cout << "\t-q --Quad \t\t\tGenerate pips and indices in all 4 corners (default: " << (quad ? "true" : "false") << ")." << endl;
     cout << endl;
     cout << "\t--IndexHeight value \t\tHeight of index as a % of card height (default: " << indexInfo.getH() << ")." << endl;
     cout << "\t--IndexCentreX value \t\tX value of centre of index as a % of card width (default: " << indexInfo.getX() << ")." << endl;
@@ -119,6 +120,7 @@ static int parseCommandLine(int argc, char *argv[])
             {"help",    no_argument,0,0},
             {"KeepAspectRatio",  no_argument,0,'a'},
             {"MPC",     no_argument,0,'m'},
+            {"Quad",    no_argument,0,'q'},
 
             {"IndexHeight", required_argument,0,1},
             {"IndexCentreX", required_argument,0,2},
@@ -142,10 +144,11 @@ static int parseCommandLine(int argc, char *argv[])
             {"CentreX", required_argument,0,16},
             {"Inputs", required_argument,0,17},
             {"version", no_argument,0,'v'},
+            {"debug", no_argument,0,'x'},
             {0,0,0,0}
         };
 
-        optchr = getopt_long(argc, argv ,"w:h:c:i:p:f:s:o:amv", long_options, &option_index);
+        optchr = getopt_long(argc, argv ,"w:h:c:i:p:f:s:o:amqvx", long_options, &option_index);
         if (optchr == -1)
             return 0;
 
@@ -164,6 +167,7 @@ static int parseCommandLine(int argc, char *argv[])
 
             case 'a': keepAspectRatio = true;               break;
             case 'm': mpc = true;                           break;
+            case 'q': quad = true;                          break;
 
             case 1:   indexInfo.setH(atof(optarg));         break;
             case 2:   indexInfo.setX(atof(optarg));         break;
@@ -196,6 +200,7 @@ static int parseCommandLine(int argc, char *argv[])
                 break;
 
             case 'v':   version();  return 2;
+            case 'x':   debug = true; break;
 
             case 0:     help();     return 1;
 
@@ -256,8 +261,6 @@ void recalculate(void)
 }
 
 
-#if 0
-#define DEBUG
 static void dumpValues(void)
 {
 	cout << "cardWidthPx\t" << cardWidthPx << endl;
@@ -280,6 +283,7 @@ static void dumpValues(void)
 	cout << endl;
 	cout << "keepAspectRatio\t" << keepAspectRatio << endl;
 	cout << "MPC\t\t" << mpc << endl;
+	cout << "Quad\t\t" << quad << endl;
 	cout << endl;
 	cout << "cornerRadius\t" << cornerRadius << endl;
 	cout << "radius\t\t" << radius << endl;
@@ -305,7 +309,6 @@ static void dumpValues(void)
 	cout << "imageX\t\t" << imageX << endl;
 	cout << "imageY\t\t" << imageY << endl;
 }
-#endif
 
 
 /**
@@ -323,9 +326,8 @@ int init(int argc, char *argv[])
     if (!ret)
         recalculate();
 
-#if defined DEBUG
-    dumpValues();
-#endif
+    if (debug)
+        dumpValues();
 
     return ret;
 }
