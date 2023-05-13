@@ -113,7 +113,7 @@ int desc::getImageSize(void)
 
     stringstream outputString{};
     int x{portOriginXPx + cardBorderPx};
-    const int y{portOriginXPx + cardBorderPx};
+    const int y{portOriginYPx + cardBorderPx};
     const int w{ROUND(portWidthPx)};
     const int h{ROUND(portHeightPx)};
     outputString << "\t-draw \"image over " << x << ',' << y << ' ' << w << ',' << h << " '" << FileName << "'\" \\" << endl;
