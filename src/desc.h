@@ -116,8 +116,7 @@ public:
     float getAspectRatio(void) const { return aspectRatio; }
     int getPortOriginXPx(void) const { return portOriginXPx; }
     int getPortOriginYPx(void) const { return portOriginYPx; }
-    const string & draw(void) const { return DrawString; }
-    const string & ward(void) const { return WardString; }
+    const string & draw(int left = true) const { return left ? DrawString : WardString; }
 
     float centre2OriginX(float centre) const { return centre - (getPortWidthPx()/2); }
     float centre2OriginY(float centre) const { return centre - (getPortHeightPx()/2); }

@@ -450,8 +450,8 @@ int generateScript(int argc, char *argv[])
             file << indexD.draw();          // Draw index.
             if (quad)
             {
-                file << pipD.ward();        // Draw right-hand corner pip.
-                file << indexD.ward();      // Draw right-hand index.
+                file << pipD.draw(false);   // Draw right-hand corner pip.
+                file << indexD.draw(false); // Draw right-hand index.
             }
 
             file << "\t-rotate 180 \\" << endl;
@@ -464,8 +464,8 @@ int generateScript(int argc, char *argv[])
             file << indexD.draw();          // Draw index.
             if (quad)
             {
-                file << pipD.ward();        // Draw right-hand corner pip.
-                file << indexD.ward();      // Draw right-hand index.
+                file << pipD.draw(false);   // Draw right-hand corner pip.
+                file << indexD.draw(false); // Draw right-hand index.
             }
 
             genEndString(file, fileName);
