@@ -40,12 +40,12 @@
  *
  */
 
-static const vector<const char*> suits{ "C", "D", "H", "S" };
-static const vector<const char*> alts{ "S", "H", "D", "C" };
-static const vector<const char*> cards{ "0", "A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K" };
+static const std::vector<const char*> suits{ "C", "D", "H", "S" };
+static const std::vector<const char*> alts{ "S", "H", "D", "C" };
+static const std::vector<const char*> cards{ "0", "A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K" };
 
-static const vector<const char*> suitNames{ "Clubs", "Diamonds", "Hearts", "Spades" };
-static const vector<const char*> cardNames{ "Joker", "Ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King" };
+static const std::vector<const char*> suitNames{ "Clubs", "Diamonds", "Hearts", "Spades" };
+static const std::vector<const char*> cardNames{ "Joker", "Ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King" };
 
 
 /**
@@ -58,12 +58,12 @@ static const vector<const char*> cardNames{ "Joker", "Ace", "2", "3", "4", "5", 
  *
  * @return the generated string.
  */
-static string genStartString(void)
+static std::string genStartString(void)
 {
-    static string outputString{};
+    static std::string outputString{};
     if (outputString.empty())
     {
-        stringstream stream{};
+        std::stringstream stream{};
         const auto cardWidthPx{Config::getCardWidthPx()};
         const auto cardHeightPx{Config::getCardHeightPx()};
         const auto cardBorderPx{Config::getCardBorderPx()};
@@ -75,7 +75,7 @@ static string genStartString(void)
         const auto outlineHeight{Config::getOutlineHeight()};
         const auto strokeWidth{Config::getStrokeWidth()};
 
-        stream  << "convert -size " << cardWidthPx + (2 * cardBorderPx) << "x" << cardHeightPx + (2 * cardBorderPx) << " xc:transparent  \\" << endl;
+        stream  << "convert -size " << cardWidthPx + (2 * cardBorderPx) << "x" << cardHeightPx + (2 * cardBorderPx) << " xc:transparent  \\\n";
         stream  << "\t-fill '" << cardColour << "' ";
         if (mpc)
             stream  << "-draw 'rectangle " << borderOffset << ',' << borderOffset << ' ' << outlineWidth + (2 * cardBorderPx) << ',' << outlineHeight + (2 * cardBorderPx) << "'";
@@ -84,7 +84,7 @@ static string genStartString(void)
             stream  << "-stroke black -strokewidth " << strokeWidth << " -draw 'roundRectangle " << borderOffset << ',' << borderOffset << ' ' << outlineWidth << ',' << outlineHeight << ' ' << radius << ',' << radius << "'";
         else
             stream  << "-stroke black -strokewidth " << strokeWidth << " -draw 'rectangle " << borderOffset << ',' << borderOffset << ' ' << outlineWidth << ',' << outlineHeight << "'";
-        stream  << " \\" << endl;
+        stream  << " \\\n";
 
         outputString = stream.str();
     }
@@ -97,11 +97,11 @@ static string genStartString(void)
  *
  * @return the generated string.
  */
-static void genEndString(ofstream & file, const std::string & fileName)
+static void genEndString(std::ofstream & file, const std::string & fileName)
 {
-    file << "\t+dither -colors 256 \\" << endl;
-    file << "\tcards/" << Config::getOutputDirectory() << "/" << fileName << ".png" << endl;
-    file << endl;
+    file << "\t+dither -colors 256 \\\n";
+    file << "\tcards/" << Config::getOutputDirectory() << "/" << fileName << ".png\n";
+    file << "\n";
 }
 
 /**
@@ -113,7 +113,7 @@ static void genEndString(ofstream & file, const std::string & fileName)
  * @param  pipD - standard pip descriptor.
  * @return the generated string.
  */
-static string drawStandardPips(bool rotate, size_t card, desc & pipD)
+static std::string drawStandardPips(bool rotate, size_t card, desc & pipD)
 {
     if (!PatternCollection::isIndex(card))
         return "";
@@ -123,7 +123,7 @@ static string drawStandardPips(bool rotate, size_t card, desc & pipD)
     Pattern pattern{PatternCollection::getPattern(card)};
     pattern.setRotate(rotate);
 
-    stringstream outputString{};
+    std::stringstream outputString{};
     for (auto [xOffset, yOffset] : pattern)
     {
         pipD.reposition(x + xOffset, y + yOffset);
@@ -145,7 +145,7 @@ static string drawStandardPips(bool rotate, size_t card, desc & pipD)
  * @param  fileName - name of image file to use.
  * @return the generated string.
  */
-static string drawImage(const desc & faceD, const string & fileName)
+static std::string drawImage(const desc & faceD, const std::string & fileName)
 {
     const auto cardWidthPx{Config::getCardWidthPx()};
     const auto cardHeightPx{Config::getCardHeightPx()};
@@ -154,7 +154,7 @@ static string drawImage(const desc & faceD, const string & fileName)
     const auto imageWidthPx{Config::getImageWidthPx()};
     const auto imageHeightPx{Config::getImageHeightPx()};
 
-    stringstream outputString{};
+    std::stringstream outputString{};
     int x{Config::getImageOffsetXPx() + cardBorderPx};
     int y{Config::getImageOffsetYPx() + cardBorderPx};
     int w{imageWidthPx};
@@ -207,7 +207,7 @@ static string drawImage(const desc & faceD, const string & fileName)
         }
     }
 
-    outputString << "\t-draw \"image over " << x << ',' << y << ' ' << w << ',' << h << " '" << faceD.getFileName() << "'\" \\" << endl;
+    outputString << "\t-draw \"image over " << x << ',' << y << ' ' << w << ',' << h << " '" << faceD.getFileName() << "'\" \\\n";
 
 //- Check if image pips are required.
     if (Config::getImagePipH())
@@ -235,10 +235,10 @@ static string drawImage(const desc & faceD, const string & fileName)
             const int w2{ROUND(pipD.getPortWidthPx())};
             const int h2{ROUND(pipD.getPortHeightPx())};
 
-            outputString << "\t-draw \"image over " << x2 << ',' << y2 << ' ' << w2 << ',' << h2 << " '" << fileName << "'\" \\" << endl;
-            outputString << "\t-rotate 180 \\" << endl;
-            outputString << "\t-draw \"image over " << x2 << ',' << y2 << ' ' << w2 << ',' << h2 << " '" << fileName << "'\" \\" << endl;
-            outputString << "\t-rotate 180 \\" << endl;
+            outputString << "\t-draw \"image over " << x2 << ',' << y2 << ' ' << w2 << ',' << h2 << " '" << fileName << "'\" \\\n";
+            outputString << "\t-rotate 180 \\\n";
+            outputString << "\t-draw \"image over " << x2 << ',' << y2 << ' ' << w2 << ',' << h2 << " '" << fileName << "'\" \\\n";
+            outputString << "\t-rotate 180 \\\n";
         }
     }
 
@@ -252,14 +252,14 @@ static string drawImage(const desc & faceD, const string & fileName)
  * @param  file - output file stream.
  * @param  fileName - name of joker image file being generated.
  */
-static void drawImageMagickJoker(ofstream & file, const string & fileName)
+static void drawImageMagickJoker(std::ofstream & file, const std::string & fileName)
 {
-    const string faceFile{"boneyard/ImageMagick_logo.svg.png"};
+    const std::string faceFile{"boneyard/ImageMagick_logo.svg.png"};
     const desc faceD{95, 50, 50, faceFile};
 
-    const string headerFile{"boneyard/ImageMagickUsage.png"};
+    const std::string headerFile{"boneyard/ImageMagickUsage.png"};
     const desc headerD{4, 50, 10, headerFile};
-    const string footerFile{"boneyard/ImageMagickURL.png"};
+    const std::string footerFile{"boneyard/ImageMagickURL.png"};
     const desc footerD{3, 50, 90, footerFile};
 
     file << genStartString();
@@ -277,9 +277,9 @@ static void drawImageMagickJoker(ofstream & file, const string & fileName)
  * @param  fileName - name of joker image file being generated.
  * @param  indexD - joker index descriptor.
  */
-static void drawDefaultJoker(ofstream & file, const string & fileName, const desc & indexD)
+static void drawDefaultJoker(std::ofstream & file, const std::string & fileName, const desc & indexD)
 {
-    const string faceFile{"boneyard/Back.png"};
+    const std::string faceFile{"boneyard/Back.png"};
     const desc faceD(95, 50, 50, faceFile);
 
     file << genStartString();
@@ -288,7 +288,7 @@ static void drawDefaultJoker(ofstream & file, const string & fileName, const des
     if (indexD.isFileFound())
     {
         file << indexD.draw();
-        file << "\t-rotate 180 \\" << endl;
+        file << "\t-rotate 180 \\\n";
         file << indexD.draw();
     }
 
@@ -305,15 +305,15 @@ static void drawDefaultJoker(ofstream & file, const string & fileName, const des
  * @param  suit - index of suit for the joker being generated.
  * @return 0 if joker image found and used, 1 if default joker created.
  */
-static int drawJoker(int fails, ofstream & file, int suit)
+static int drawJoker(int fails, std::ofstream & file, int suit)
 {
-    file << "# Draw the " << suitNames[suit] << " " << cardNames[0] << " as file " << suits[suit] << cardNames[0] << ".png" << endl;
+    file << "# Draw the " << suitNames[suit] << " " << cardNames[0] << " as file " << suits[suit] << cardNames[0] << ".png\n";
 
-    const string fileName{string(suits[suit]) + cardNames[0]};
-    const string faceFile{"faces/" + Config::getFaceDirectory() + "/" + fileName + ".png"};
+    const std::string fileName{std::string(suits[suit]) + cardNames[0]};
+    const std::string faceFile{"faces/" + Config::getFaceDirectory() + "/" + fileName + ".png"};
     const desc faceD{95, 50, 50, faceFile};
 
-    const string indexFile{"indices/" + Config::getIndexDirectory() + "/" + fileName + ".png"};
+    const std::string indexFile{"indices/" + Config::getIndexDirectory() + "/" + fileName + ".png"};
     const desc indexD{Config::getIndexInfo(), indexFile};
 
     if ((indexD.isFileFound()) || (faceD.isFileFound()))
@@ -323,7 +323,7 @@ static int drawJoker(int fails, ofstream & file, int suit)
         if (indexD.isFileFound())
         {
             file << indexD.draw();
-            file << "\t-rotate 180 \\" << endl;
+            file << "\t-rotate 180 \\\n";
             file << indexD.draw();
         }
 
@@ -367,53 +367,53 @@ int generateScript(int argc, char *argv[])
     const auto pipDirectory{Config::getPipDirectory()};
     const auto faceDirectory{Config::getFaceDirectory()};
     const auto outputDirectory{Config::getOutputDirectory()};
-    ofstream file{scriptFilename.c_str()};
+    std::ofstream file{scriptFilename.c_str()};
 
 //- Open the script file for writing.
     if (!file)
     {
-        cerr << "Can't open output file " << scriptFilename << " - aborting!" << endl;
+        std::cerr << "Can't open output file " << scriptFilename << " - aborting!\n";
 
         return 1;
     }
 
 //- Generate the initial preamble of the script.
-    file << "#!/bin/sh" << endl;
-    file << endl;
-    file << "# This file was generated as \"" << scriptFilename << "\" using the following command:" << endl;
-    file << "#" << endl;
+    file << "#!/bin/sh\n";
+    file << "\n";
+    file << "# This file was generated as \"" << scriptFilename << "\" using the following command:\n";
+    file << "#\n";
     file << "#  ";
     for (int i = 0; i < argc; ++i)
         file << argv[i] << ' ';
 
-    file << endl;
-    file << "#" << endl;
-    file << endl;
-    file << "# Make the directories."  << endl;
-    file << "mkdir -p cards"  << endl;
-    file << "mkdir -p cards/" << outputDirectory << endl;
+    file << "\n";
+    file << "#\n";
+    file << "\n";
+    file << "# Make the directories."  << "\n";
+    file << "mkdir -p cards"  << "\n";
+    file << "mkdir -p cards/" << outputDirectory << "\n";
 
-    file << endl;
-    file << "# Generate the refresh script."  << endl;
-    file << "cat <<EOM >cards/" << outputDirectory  << "/" << refreshFilename << endl;
-    file << "#!/bin/sh" << endl;
-    file << endl;
-    file << "# This file was generated using the following " << argv[0] << " command." << endl;
-    file << "#" << endl;
-    file << "cd ../../" << endl;
+    file << "\n";
+    file << "# Generate the refresh script."  << "\n";
+    file << "cat <<EOM >cards/" << outputDirectory  << "/" << refreshFilename << "\n";
+    file << "#!/bin/sh\n";
+    file << "\n";
+    file << "# This file was generated using the following " << argv[0] << " command.\n";
+    file << "#\n";
+    file << "cd ../../\n";
     for (int i = 0; i < argc; ++i)
         file << argv[i] << ' ';
 
-    file << endl;
-    file << "./" << scriptFilename << endl;
-    file << "EOM" << endl;
-    file << endl;
-    file << "chmod +x cards/" << outputDirectory	<< "/" << refreshFilename << endl;
-    file << endl;
+    file << "\n";
+    file << "./" << scriptFilename << "\n";
+    file << "EOM\n";
+    file << "\n";
+    file << "chmod +x cards/" << outputDirectory	<< "/" << refreshFilename << "\n";
+    file << "\n";
 
 
 //- Initial blank card string used as a template for each card.
-    const string startString{genStartString()};
+    const std::string startString{genStartString()};
     const auto indexInfo{Config::getIndexInfo()};
     const auto cornerPipInfo{Config::getCornerPipInfo()};
     const auto standardPipInfo{Config::getStandardPipInfo()};
@@ -425,39 +425,39 @@ int generateScript(int argc, char *argv[])
 //- Generate all the playing cards.
     for (size_t s = 0; s < suits.size(); ++s)
     {
-        const string suit{string(suits[s])};
+        const std::string suit{std::string(suits[s])};
 
-        string pipFile{string("pips/") + pipDirectory + "/" + suit + "S.png"};     // Try small pip file first.
+        std::string pipFile{std::string("pips/") + pipDirectory + "/" + suit + "S.png"};     // Try small pip file first.
         desc pipD{cornerPipInfo, pipFile};
         if (!pipD.isFileFound())
         {
             // Small pip file not found, so use standard pip file.
-            pipFile = string("pips/") + pipDirectory + "/" + suit + ".png";
+            pipFile = std::string("pips/") + pipDirectory + "/" + suit + ".png";
             pipD.setFileName(pipFile);
         }
 
         // Generate the playing cards in the current suit.
-        pipFile = string("pips/") + pipDirectory + "/" + suit + ".png";             // Use standard pip file.
+        pipFile = std::string("pips/") + pipDirectory + "/" + suit + ".png";             // Use standard pip file.
         desc standardPipD{standardPipInfo, pipFile};
         for (size_t c = 1; c < cards.size(); ++c)
         {
             // Set up the variables.
-            string card{string(cards[c])};
-            string fileName{suit + card};
+            std::string card{std::string(cards[c])};
+            std::string fileName{suit + card};
 
-            string indexFile{string("indices/") + indexDirectory + "/" + fileName + ".png"};
+            std::string indexFile{std::string("indices/") + indexDirectory + "/" + fileName + ".png"};
             desc indexD{indexInfo, indexFile};
             if (!indexD.isFileFound())
             {
                 // indexInfo for suit file not found, so use alternate index file.
-                indexFile = string("indices/") + indexDirectory + "/" + string(alts[s]) + card + ".png";
+                indexFile = std::string("indices/") + indexDirectory + "/" + std::string(alts[s]) + card + ".png";
                 indexD.setFileName(indexFile);
             }
 
-            string faceFile{string("faces/") + faceDirectory + "/" + fileName + ".png"};
+            std::string faceFile{std::string("faces/") + faceDirectory + "/" + fileName + ".png"};
             desc faceD{imageHeight, imageX, imageY, faceFile};
 
-            string drawFace{};
+            std::string drawFace{};
 
             if (faceD.useStandardPips())
             {
@@ -473,7 +473,7 @@ int generateScript(int argc, char *argv[])
 
 
             // Write to output file.
-            file << "# Draw the " << cardNames[c] << " of " << suitNames[s] << " as file " << fileName << ".png." << endl;
+            file << "# Draw the " << cardNames[c] << " of " << suitNames[s] << " as file " << fileName << ".png.\n";
             file << startString;
 
             if ((faceD.useStandardPips()) || (faceD.isFileFound() && faceD.isLandscape()))
@@ -487,7 +487,7 @@ int generateScript(int argc, char *argv[])
                 file << indexD.draw(false); // Draw right-hand index.
             }
 
-            file << "\t-rotate 180 \\" << endl;
+            file << "\t-rotate 180 \\\n";
 
             if (faceD.useStandardPips())
                 drawFace = drawStandardPips(false, c, standardPipD);
@@ -517,8 +517,8 @@ int generateScript(int argc, char *argv[])
     for (int s = 0; s < suits.size(); ++s)
         fails += drawJoker(fails, file, s);
 
-    file << "echo Output created in cards/" << outputDirectory << "/" << endl;
-    file << endl;
+    file << "echo Output created in cards/" << outputDirectory << "/\n";
+    file << "\n";
 
     return 0;
 }

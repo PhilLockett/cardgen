@@ -37,7 +37,7 @@
  *
  * @param  os - output stream.
  */
-void info::print(ostream &os) const
+void info::print(std::ostream &os) const
 {
     os << H << "\t(" << X << ", " << Y << ")";
 }
@@ -75,7 +75,7 @@ int desc::getImageSize(void)
     aspectRatio = 1;
 
 //- Open the binary file.
-    ifstream file{FileName, ifstream::in|ifstream::binary};
+    std::ifstream file{FileName, std::ifstream::in|std::ifstream::binary};
 
     if (!file.is_open())
         return 1;
@@ -112,7 +112,7 @@ int desc::getImageSize(void)
         return 0;
     }
 
-    stringstream outputString{};
+    std::stringstream outputString{};
     const auto cardWidthPx{Config::getCardWidthPx()};
     const auto cardBorderPx{Config::getCardBorderPx()};
 
@@ -120,12 +120,12 @@ int desc::getImageSize(void)
     const int y{portOriginYPx + cardBorderPx};
     const int w{ROUND(portWidthPx)};
     const int h{ROUND(portHeightPx)};
-    outputString << "\t-draw \"image over " << x << ',' << y << ' ' << w << ',' << h << " '" << FileName << "'\" \\" << endl;
+    outputString << "\t-draw \"image over " << x << ',' << y << ' ' << w << ',' << h << " '" << FileName << "'\" \\\n";
     DrawString = outputString.str();
 
     outputString.str(std::string());
     x = cardWidthPx - portOriginXPx - w + cardBorderPx;
-    outputString << "\t-draw \"image over " << x << ',' << y << ' ' << w << ',' << h << " '" << FileName << "'\" \\" << endl;
+    outputString << "\t-draw \"image over " << x << ',' << y << ' ' << w << ',' << h << " '" << FileName << "'\" \\\n";
     WardString = outputString.str();
 
     return 0;
@@ -141,7 +141,7 @@ int desc::getImageSize(void)
  * @param  fileName - Name of image file.
  * @return true if valid, false otherwise.
  */
-desc::desc(float H, float X, float Y, const string & fileName)
+desc::desc(float H, float X, float Y, const std::string & fileName)
 : FileName(fileName), FileFound(false)
 {
     const auto cardHeightPx{Config::getCardHeightPx()};
@@ -165,7 +165,7 @@ desc::desc(float H, float X, float Y, const string & fileName)
  * @param  fileName - Name of image file.
  * @return true if valid, false otherwise.
  */
-desc::desc(const info & I, const string & fileName)
+desc::desc(const info & I, const std::string & fileName)
 : FileName(fileName), FileFound(false)
 {
     const auto cardHeightPx{Config::getCardHeightPx()};
@@ -206,7 +206,7 @@ void desc::reposition(float X, float Y)
  *
  * @param  fileName - Name of new image file.
  */
-void desc::setFileName(const string & fileName)
+void desc::setFileName(const std::string & fileName)
 {
     FileName = fileName;
     getImageSize();

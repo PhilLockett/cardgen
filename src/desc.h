@@ -29,8 +29,6 @@
 #include <iostream>
 #include <string>
 
-using namespace std;
-
 
 /**
  * @section info class.
@@ -67,10 +65,10 @@ public:
     void setX(float v) { ChangedX = true; X = v; }
     void setY(float v) { ChangedY = true; Y = v; }
 
-    friend ostream & operator<<(ostream &os, const info &A) { A.print(os); return os; }
+    friend std::ostream & operator<<(std::ostream &os, const info &A) { A.print(os); return os; }
 
 protected:
-    void print(ostream &os=cout) const;
+    void print(std::ostream &os=std::cout) const;
 
 };
 
@@ -87,8 +85,8 @@ private:
     int getImageSize(void);
     int genDrawString(void);
 
-    string DrawString;
-    string WardString;
+    std::string DrawString;
+    std::string WardString;
     bool FileFound;
     int imageWidthPx;
     int imageHeightPx;
@@ -101,14 +99,14 @@ private:
     float portHeightPx;
     float portWidthPx;
 
-    string FileName;
+    std::string FileName;
 
 public:
-    desc(float H, float X, float Y, const string & FN);
-    desc(const info & I, const string & FN);
+    desc(float H, float X, float Y, const std::string & FN);
+    desc(const info & I, const std::string & FN);
     void reposition(float X, float Y);
-    void setFileName(const string & fileName);
-    const string & getFileName(void) const { return FileName; }
+    void setFileName(const std::string & fileName);
+    const std::string & getFileName(void) const { return FileName; }
 
     float getPortCentreXPx(void) const { return portCentreXPx; }
     float getPortCentreYPx(void) const { return portCentreYPx; }
@@ -120,7 +118,7 @@ public:
     float getAspectRatio(void) const { return aspectRatio; }
     int getPortOriginXPx(void) const { return portOriginXPx; }
     int getPortOriginYPx(void) const { return portOriginYPx; }
-    const string & draw(int left = true) const { return left ? DrawString : WardString; }
+    const std::string & draw(int left = true) const { return left ? DrawString : WardString; }
 
     float centre2OriginX(float centre) const { return centre - (getPortWidthPx()/2); }
     float centre2OriginY(float centre) const { return centre - (getPortHeightPx()/2); }

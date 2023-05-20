@@ -29,8 +29,6 @@
 #include <string>
 #include "desc.h"
 
-using namespace std;
-
 #if !defined ROUND
 #define ROUND(v) (int)((v) + 0.5)
 #endif
@@ -43,19 +41,19 @@ using namespace std;
 
 const int _cardWidthPx{380};
 const int _cardHeightPx{532};
-const string _cardColour{"white"};
+const std::string _cardColour{"white"};
 
 const info _indexInfo{10.5, 8.07, 9.84};
 const info _cornerPipInfo{7.5, 8.07, 20.41};
 const info _standardPipInfo{18.0, 25.7, 18.65};
 const info _imagePipInfo{14.29, 12.63, 9.77};
 
-const string _indexDirectory{"1"};
-const string _pipDirectory{"1"};
-const string _faceDirectory{"1"};
+const std::string _indexDirectory{"1"};
+const std::string _pipDirectory{"1"};
+const std::string _faceDirectory{"1"};
 
-const string _scriptFilename{"draw.sh"};
-const string _refreshFilename{"x_refresh.sh"};
+const std::string _scriptFilename{"draw.sh"};
+const std::string _refreshFilename{"x_refresh.sh"};
 
 const bool _keepAspectRatio{};
 const bool _mpc{};
