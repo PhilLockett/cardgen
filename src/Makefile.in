@@ -99,8 +99,8 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-am_cardgen_OBJECTS = cardgen.$(OBJEXT) desc.$(OBJEXT) Loc.$(OBJEXT) \
-	dump.$(OBJEXT) init.$(OBJEXT)
+am_cardgen_OBJECTS = Opts.$(OBJEXT) Configuration.$(OBJEXT) \
+	cardgen.$(OBJEXT) desc.$(OBJEXT) Loc.$(OBJEXT) dump.$(OBJEXT)
 cardgen_OBJECTS = $(am_cardgen_OBJECTS)
 cardgen_LDADD = $(LDADD)
 AM_V_P = $(am__v_P_@AM_V@)
@@ -118,8 +118,9 @@ am__v_at_1 =
 DEFAULT_INCLUDES = -I.@am__isrc@
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__maybe_remake_depfiles = depfiles
-am__depfiles_remade = ./$(DEPDIR)/Loc.Po ./$(DEPDIR)/cardgen.Po \
-	./$(DEPDIR)/desc.Po ./$(DEPDIR)/dump.Po ./$(DEPDIR)/init.Po
+am__depfiles_remade = ./$(DEPDIR)/Configuration.Po ./$(DEPDIR)/Loc.Po \
+	./$(DEPDIR)/Opts.Po ./$(DEPDIR)/cardgen.Po ./$(DEPDIR)/desc.Po \
+	./$(DEPDIR)/dump.Po
 am__mv = mv -f
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
@@ -263,11 +264,12 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 cardgen_SOURCES = \
+	Opts.cpp Opts.h \
+	Configuration.cpp Configuration.h \
 	cardgen.cpp cardgen.h \
 	desc.cpp desc.h \
 	Loc.cpp Loc.h \
-	dump.cpp \
-	init.cpp
+	dump.cpp
 
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am
@@ -371,11 +373,12 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Configuration.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Loc.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Opts.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cardgen.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/desc.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dump.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/init.Po@am__quote@ # am--include-marker
 
 $(am__depfiles_remade):
 	@$(MKDIR_P) $(@D)
@@ -523,11 +526,12 @@ clean: clean-am
 clean-am: clean-binPROGRAMS clean-generic mostlyclean-am
 
 distclean: distclean-am
-		-rm -f ./$(DEPDIR)/Loc.Po
+		-rm -f ./$(DEPDIR)/Configuration.Po
+	-rm -f ./$(DEPDIR)/Loc.Po
+	-rm -f ./$(DEPDIR)/Opts.Po
 	-rm -f ./$(DEPDIR)/cardgen.Po
 	-rm -f ./$(DEPDIR)/desc.Po
 	-rm -f ./$(DEPDIR)/dump.Po
-	-rm -f ./$(DEPDIR)/init.Po
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-hdr distclean-tags
@@ -573,11 +577,12 @@ install-ps-am:
 installcheck-am:
 
 maintainer-clean: maintainer-clean-am
-		-rm -f ./$(DEPDIR)/Loc.Po
+		-rm -f ./$(DEPDIR)/Configuration.Po
+	-rm -f ./$(DEPDIR)/Loc.Po
+	-rm -f ./$(DEPDIR)/Opts.Po
 	-rm -f ./$(DEPDIR)/cardgen.Po
 	-rm -f ./$(DEPDIR)/desc.Po
 	-rm -f ./$(DEPDIR)/dump.Po
-	-rm -f ./$(DEPDIR)/init.Po
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 

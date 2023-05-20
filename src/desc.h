@@ -51,13 +51,17 @@ public:
     info(float h, float x, float y) : H(h), X(x), Y(y), ChangedH{}, ChangedX{}, ChangedY{} {}
     info(const info & a) : H(a.H), X(a.X), Y(a.Y), ChangedH{}, ChangedX{}, ChangedY{} {}
 
-    float getH(void) { return H; }
-    float getX(void) { return X; }
-    float getY(void) { return Y; }
+    float getH(void) const { return H; }
+    float getX(void) const { return X; }
+    float getY(void) const { return Y; }
 
-    bool isChangedH(void) { return ChangedH; }
-    bool isChangedX(void) { return ChangedX; }
-    bool isChangedY(void) { return ChangedY; }
+    std::string getHStr(void) const { return std::to_string(H); }
+    std::string getXStr(void) const { return std::to_string(X); }
+    std::string getYStr(void) const { return std::to_string(Y); }
+
+    bool isChangedH(void) const { return ChangedH; }
+    bool isChangedX(void) const { return ChangedX; }
+    bool isChangedY(void) const { return ChangedY; }
 
     void setH(float v) { ChangedH = true; H = v; }
     void setX(float v) { ChangedX = true; X = v; }
@@ -101,7 +105,7 @@ private:
 
 public:
     desc(float H, float X, float Y, const string & FN);
-    desc(info & I, const string & FN);
+    desc(const info & I, const string & FN);
     void reposition(float X, float Y);
     void setFileName(const string & fileName);
     const string & getFileName(void) const { return FileName; }

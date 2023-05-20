@@ -32,6 +32,7 @@
 #include "cardgen.h"
 #include "desc.h"
 #include "Loc.h"
+#include "Configuration.h"
 
 
 /**
@@ -63,6 +64,16 @@ static string genStartString(void)
     if (outputString.empty())
     {
         stringstream stream{};
+        const auto cardWidthPx{Config::getCardWidthPx()};
+        const auto cardHeightPx{Config::getCardHeightPx()};
+        const auto cardBorderPx{Config::getCardBorderPx()};
+        const auto cardColour{Config::getCardColour()};
+        const auto mpc{Config::isMpc()};
+        const auto radius{Config::getRadius()};
+        const auto borderOffset{Config::getBorderOffset()};
+        const auto outlineWidth{Config::getOutlineWidth()};
+        const auto outlineHeight{Config::getOutlineHeight()};
+        const auto strokeWidth{Config::getStrokeWidth()};
 
         stream  << "convert -size " << cardWidthPx + (2 * cardBorderPx) << "x" << cardHeightPx + (2 * cardBorderPx) << " xc:transparent  \\" << endl;
         stream  << "\t-fill '" << cardColour << "' ";
@@ -89,7 +100,7 @@ static string genStartString(void)
 static void genEndString(ofstream & file, const std::string & fileName)
 {
     file << "\t+dither -colors 256 \\" << endl;
-    file << "\tcards/" << outputDirectory << "/" << fileName << ".png" << endl;
+    file << "\tcards/" << Config::getOutputDirectory() << "/" << fileName << ".png" << endl;
     file << endl;
 }
 
@@ -107,8 +118,8 @@ static string drawStandardPips(bool rotate, size_t card, desc & pipD)
     if (!PatternCollection::isIndex(card))
         return "";
 
-    const float x{standardPipInfo.getX()};
-    const float y{standardPipInfo.getY()};
+    const float x{Config::getStandardPipX()};
+    const float y{Config::getStandardPipY()};
     Pattern pattern{PatternCollection::getPattern(card)};
     pattern.setRotate(rotate);
 
@@ -136,9 +147,16 @@ static string drawStandardPips(bool rotate, size_t card, desc & pipD)
  */
 static string drawImage(const desc & faceD, const string & fileName)
 {
+    const auto cardWidthPx{Config::getCardWidthPx()};
+    const auto cardHeightPx{Config::getCardHeightPx()};
+    const auto cardBorderPx{Config::getCardBorderPx()};
+    const auto keepAspectRatio{Config::isKeepAspectRatio()};
+    const auto imageWidthPx{Config::getImageWidthPx()};
+    const auto imageHeightPx{Config::getImageHeightPx()};
+
     stringstream outputString{};
-    int x{imageOffsetXPx + cardBorderPx};
-    int y{imageOffsetYPx + cardBorderPx};
+    int x{Config::getImageOffsetXPx() + cardBorderPx};
+    int y{Config::getImageOffsetYPx() + cardBorderPx};
     int w{imageWidthPx};
     int h{imageHeightPx};
     float scale{1};
@@ -192,8 +210,10 @@ static string drawImage(const desc & faceD, const string & fileName)
     outputString << "\t-draw \"image over " << x << ',' << y << ' ' << w << ',' << h << " '" << faceD.getFileName() << "'\" \\" << endl;
 
 //- Check if image pips are required.
-    if (imagePipInfo.getH())
+    if (Config::getImagePipH())
     {
+        const auto imagePipScale{Config::getImagePipScale()};
+        const info & imagePipInfo{Config::getImagePipInfo()};
         info scaledPip{imagePipInfo};
 
         // Rescale image pips, but only if they haven't been manually altered.
@@ -290,11 +310,11 @@ static int drawJoker(int fails, ofstream & file, int suit)
     file << "# Draw the " << suitNames[suit] << " " << cardNames[0] << " as file " << suits[suit] << cardNames[0] << ".png" << endl;
 
     const string fileName{string(suits[suit]) + cardNames[0]};
-    const string faceFile{"faces/" + faceDirectory + "/" + fileName + ".png"};
+    const string faceFile{"faces/" + Config::getFaceDirectory() + "/" + fileName + ".png"};
     const desc faceD{95, 50, 50, faceFile};
 
-    const string indexFile{"indices/" + indexDirectory + "/" + fileName + ".png"};
-    const desc indexD{indexInfo, indexFile};
+    const string indexFile{"indices/" + Config::getIndexDirectory() + "/" + fileName + ".png"};
+    const desc indexD{Config::getIndexInfo(), indexFile};
 
     if ((indexD.isFileFound()) || (faceD.isFileFound()))
     {
@@ -341,6 +361,12 @@ static int drawJoker(int fails, ofstream & file, int suit)
  */
 int generateScript(int argc, char *argv[])
 {
+    const auto scriptFilename{Config::getScriptFilename()};
+    const auto refreshFilename{Config::getRefreshFilename()};
+    const auto indexDirectory{Config::getIndexDirectory()};
+    const auto pipDirectory{Config::getPipDirectory()};
+    const auto faceDirectory{Config::getFaceDirectory()};
+    const auto outputDirectory{Config::getOutputDirectory()};
     ofstream file{scriptFilename.c_str()};
 
 //- Open the script file for writing.
@@ -388,6 +414,13 @@ int generateScript(int argc, char *argv[])
 
 //- Initial blank card string used as a template for each card.
     const string startString{genStartString()};
+    const auto indexInfo{Config::getIndexInfo()};
+    const auto cornerPipInfo{Config::getCornerPipInfo()};
+    const auto standardPipInfo{Config::getStandardPipInfo()};
+    const auto imageHeight{Config::getImageHeight()};
+    const auto imageX{Config::getImageX()};
+    const auto imageY{Config::getImageY()};
+    const auto quad{Config::isQuad()};
 
 //- Generate all the playing cards.
     for (size_t s = 0; s < suits.size(); ++s)
@@ -474,11 +507,11 @@ int generateScript(int argc, char *argv[])
 
 
 //- Add the Jokers using narrower borders.
-    imageBorderX = 7;
-    imageBorderY = 5;
-    indexInfo.setH(30.0);
-    indexInfo.setY(20.0);
-    recalculate();
+    Config::setImageBorderX(7);
+    Config::setImageBorderY(5);
+    Config::getIndexInfo().setH(30.0);
+    Config::getIndexInfo().setY(20.0);
+    Config::instance().recalculate();
 
     int fails{};
     for (int s = 0; s < suits.size(); ++s)

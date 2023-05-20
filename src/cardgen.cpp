@@ -25,62 +25,13 @@
 
 #include "cardgen.h"
 #include <sys/stat.h>
+#include "Configuration.h"
 
 
 /**
  * @section Global variables.
  *
  */
-
-int cardWidthPx{380};
-int cardHeightPx{532};
-int cardBorderPx{};
-string cardColour{"white"};
-
-info indexInfo(10.5, 8.07, 9.84);
-info cornerPipInfo(7.5, 8.07, 20.41);
-info standardPipInfo(18.0, 25.7, 18.65);
-info imagePipInfo(14.29, 12.63, 9.77);
-
-string indexDirectory{"1"};
-string pipDirectory{"1"};
-string faceDirectory{"1"};
-
-string scriptFilename{"draw.sh"};
-string refreshFilename{"x_refresh.sh"};
-string outputDirectory{};
-
-bool keepAspectRatio{};
-bool mpc{};
-bool quad{};
-
-float cornerRadius{3.76};
-int radius{};
-int strokeWidth{2};
-int borderOffset{1};
-int outlineWidth{};
-int outlineHeight{};
-
-float imageBorderX{14.54};
-float imageBorderY{10.14};
-float originalImageWidth{100 - (2 * imageBorderX)};
-float originalImageHeight{50 - imageBorderY};
-
-float viewportWindowX{};
-float viewportWindowY{};
-
-float imageWidth{};
-float imageHeight{};
-int imageWidthPx{};
-int imageHeightPx{};
-int imageOffsetXPx{};
-int imageOffsetYPx{};
-float imagePipScale{};
-float imageX{};
-float imageY{};
-
-bool debug{};
-
 
 /**
  * System entry point.
@@ -92,9 +43,13 @@ bool debug{};
 int main(int argc, char *argv[])
 {
 //- Get the command line parameters.
-    int ret{init(argc, argv)};
-
+    int ret{Config::instance().init(argc, argv)};
     if (ret < 0)
+        return 1;
+    else if (ret > 0)
+        return 0;
+
+    if (!Config::isValid(true))
         return 1;
 
 //- If all is well, generate the script.
@@ -103,7 +58,7 @@ int main(int argc, char *argv[])
         generateScript(argc, argv);
 
         // Ensure output scripts are executable.
-        chmod(scriptFilename.c_str(), S_IRWXU|S_IRGRP|S_IXGRP|S_IROTH|S_IXOTH);
+        chmod(Config::getScriptFilename().c_str(), S_IRWXU|S_IRGRP|S_IXGRP|S_IROTH|S_IXOTH);
     }
 
     return 0;

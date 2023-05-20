@@ -37,61 +37,41 @@ using namespace std;
 
 
 /**
- * @section Global variables.
+ * @section Default values for global variables.
  *
  */
 
-extern int cardWidthPx;
-extern int cardHeightPx;
-extern int cardBorderPx;
-extern string cardColour;
+const int _cardWidthPx{380};
+const int _cardHeightPx{532};
+const string _cardColour{"white"};
 
-extern info indexInfo;
-extern info cornerPipInfo;
-extern info standardPipInfo;
-extern info imagePipInfo;
+const info _indexInfo{10.5, 8.07, 9.84};
+const info _cornerPipInfo{7.5, 8.07, 20.41};
+const info _standardPipInfo{18.0, 25.7, 18.65};
+const info _imagePipInfo{14.29, 12.63, 9.77};
 
-extern string indexDirectory;
-extern string pipDirectory;
-extern string faceDirectory;
+const string _indexDirectory{"1"};
+const string _pipDirectory{"1"};
+const string _faceDirectory{"1"};
 
-extern string scriptFilename;
-extern string refreshFilename;
-extern string outputDirectory;
+const string _scriptFilename{"draw.sh"};
+const string _refreshFilename{"x_refresh.sh"};
 
-extern bool keepAspectRatio;
-extern bool mpc;
+const bool _keepAspectRatio{};
+const bool _mpc{};
 const int mpcWidth{750};
 const int mpcHeight{1050};
 const int mpcBorder{36};
-extern bool quad;
+const bool _quad{};
 
-extern float cornerRadius;
-extern int radius;
-extern int strokeWidth;
-extern int borderOffset;
-extern int outlineWidth;
-extern int outlineHeight;
+const float _cornerRadius{3.76};
+const int _strokeWidth{2};
+const int _borderOffset{1};
 
-extern float imageBorderX;
-extern float imageBorderY;
-extern float originalImageWidth;
-extern float originalImageHeight;
-
-extern float viewportWindowX;
-extern float viewportWindowY;
-
-extern float imageWidth;
-extern float imageHeight;
-extern int imageWidthPx;
-extern int imageHeightPx;
-extern int imageOffsetXPx;
-extern int imageOffsetYPx;
-extern float imagePipScale;
-extern float imageX;
-extern float imageY;
-
-extern bool debug;
+const float _imageBorderX{14.54};
+const float _imageBorderY{10.14};
+const float _originalImageWidth{100 - (2 * _imageBorderX)};
+const float _originalImageHeight{50 - _imageBorderY};
 
 
 /**
@@ -99,9 +79,8 @@ extern bool debug;
  *
  */
 
-extern void recalculate(void);
-extern int init(int argc, char *argv[]);
 extern int generateScript(int argc, char *argv[]);
+
 
 #endif //!defined _CARDGEN_H_INCLUDED_
 

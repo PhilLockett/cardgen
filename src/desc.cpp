@@ -23,12 +23,13 @@
  * Implementation for the info and desc classes.
  */
 
-#include "cardgen.h"
-#include "desc.h"
-
 #include <arpa/inet.h>
 #include <sstream>
 #include <fstream>
+
+#include "cardgen.h"
+#include "desc.h"
+#include "Configuration.h"
 
 
 /**
@@ -112,6 +113,9 @@ int desc::getImageSize(void)
     }
 
     stringstream outputString{};
+    const auto cardWidthPx{Config::getCardWidthPx()};
+    const auto cardBorderPx{Config::getCardBorderPx()};
+
     int x{portOriginXPx + cardBorderPx};
     const int y{portOriginYPx + cardBorderPx};
     const int w{ROUND(portWidthPx)};
@@ -140,6 +144,9 @@ int desc::getImageSize(void)
 desc::desc(float H, float X, float Y, const string & fileName)
 : FileName(fileName), FileFound(false)
 {
+    const auto cardHeightPx{Config::getCardHeightPx()};
+    const auto cardWidthPx{Config::getCardWidthPx()};
+
     getImageSize();
     portHeightPx  = H * cardHeightPx / 100;
     portWidthPx   = portHeightPx * aspectRatio;
@@ -158,9 +165,12 @@ desc::desc(float H, float X, float Y, const string & fileName)
  * @param  fileName - Name of image file.
  * @return true if valid, false otherwise.
  */
-desc::desc(info & I, const string & fileName)
+desc::desc(const info & I, const string & fileName)
 : FileName(fileName), FileFound(false)
 {
+    const auto cardHeightPx{Config::getCardHeightPx()};
+    const auto cardWidthPx{Config::getCardWidthPx()};
+
     getImageSize();
     portHeightPx  = I.getH() * cardHeightPx / 100;
     portWidthPx   = portHeightPx * aspectRatio;
@@ -180,6 +190,9 @@ desc::desc(info & I, const string & fileName)
  */
 void desc::reposition(float X, float Y)
 {
+    const auto cardHeightPx{Config::getCardHeightPx()};
+    const auto cardWidthPx{Config::getCardWidthPx()};
+
     portCentreXPx = X * cardWidthPx / 100;
     portCentreYPx = Y * cardHeightPx / 100;
     portOriginXPx = ROUND(centre2OriginX(portCentreXPx));
