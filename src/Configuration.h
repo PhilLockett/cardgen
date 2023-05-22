@@ -152,8 +152,8 @@ private:
     void setName(std::string value) { name = value; }
     void enableDebug(void) { debug = true; }
 
-    int version(void);
-    int help(const std::string & error);
+    int version(void) const;
+    int help(const std::string & error) const;
     int parseCommandLine(int argc, char *argv[]);
     int initialise(int argc, char *argv[]);
 

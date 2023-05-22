@@ -45,7 +45,7 @@
  *
  * @param  name - of application.
  */
-int Config::version(void)
+int Config::version(void) const
 {
     std::cout << "Version " VERSION " of " << name << "\n";
     std::cout << "Feedback to: " PACKAGE_BUGREPORT "\n";
@@ -100,7 +100,7 @@ Opts optSet{optList, "    "};
  *
  * @param  name - of application.
  */
-int Config::help(const std::string & error)
+int Config::help(const std::string & error) const
 {
     std::cout << "Usage: " << name << " [Options]\n";
     std::cout << "\n";
