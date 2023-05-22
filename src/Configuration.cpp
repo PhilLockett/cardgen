@@ -414,6 +414,29 @@ void Config::display(std::ostream &os) const
  */
 bool Config::isValid(bool showErrors)
 {
+    if (!std::filesystem::exists(getIndexDirectory()))
+    {
+        if (showErrors)
+            std::cerr << "\nIndex directory \"" << getIndexDirectory() << "\" does not exist.\n";
+        
+        return false;
+    }
+
+    if (!std::filesystem::exists(getPipDirectory()))
+    {
+        if (showErrors)
+            std::cerr << "\nPip directory \"" << getPipDirectory() << "\" does not exist.\n";
+
+        return false;
+    }
+
+    if (!std::filesystem::exists(getFaceDirectory()))
+    {
+        if (showErrors)
+            std::cerr << "\nFace directory \"" << getFaceDirectory() << "\" does not exist.\n";
+
+        return false;
+    }
 
     return true;
 }
