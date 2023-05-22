@@ -26,6 +26,7 @@
 #include <future>
 #include <algorithm>
 #include <fstream>
+#include <filesystem>
 
 #include "cardgen.h"
 
@@ -152,12 +153,12 @@ int Config::parseCommandLine(int argc, char *argv[])
         case 'h': cardHeightPx = option.getArgInt();            break;
         case 'c': cardColour = option.getArg();                 break;
 
-        case 'i': indexDirectory = option.getArg();             break;
-        case 'p': pipDirectory = option.getArg();               break;
-        case 'f': faceDirectory = option.getArg();              break;
+        case 'i': setIndexDirectory(option.getArg());           break;
+        case 'p': setPipDirectory(option.getArg());             break;
+        case 'f': setFaceDirectory(option.getArg());            break;
 
         case 's': scriptFilename = option.getArg();             break;
-        case 'o': outputDirectory = option.getArg();            break;
+        case 'o': setOutputDirectory(option.getArg());          break;
 
         case 'a': keepAspectRatio = true;                       break;
         case 'm': mpc = true;                                   break;
@@ -188,9 +189,9 @@ int Config::parseCommandLine(int argc, char *argv[])
             break;
 
         case 'I':
-            indexDirectory = option.getArg();
-            pipDirectory   = option.getArg();
-            faceDirectory  = option.getArg();
+            setIndexDirectory(option.getArg());
+            setPipDirectory(option.getArg());
+            setFaceDirectory(option.getArg());
             break;
 
         case 'x': enableDebug(); break;
@@ -285,9 +286,64 @@ void Config::recalculate(void)
 
 //- If "outputDirectory" isn't explicitly set, use "face".
     if (!outputDirectory.length())
-        outputDirectory = faceDirectory;
+    {
+        std::filesystem::path path{faceDirectory.substr(0, faceDirectory.length()-1)};
+        setOutputDirectory(path.filename().string());
+    }
 
     PatternCollection::calibrate(viewportWindowX, viewportWindowY);
+}
+
+std::string Config::makeIndexPath(std::string value)
+{
+    std::filesystem::path path{_indexBase};
+    path /= value;
+
+    return path.string() + "/";
+}
+
+std::string Config::makePipPath(std::string value)
+{
+    std::filesystem::path path{_pipBase};
+    path /= value;
+
+    return path.string() + "/";
+}
+
+std::string Config::makeFacePath(std::string value)
+{
+    std::filesystem::path path{_faceBase};
+    path /= value;
+
+    return path.string() + "/";
+}
+
+std::string Config::makeOutputPath(std::string value)
+{
+    std::filesystem::path path{_outputBase};
+    path /= value;
+
+    return path.string() + "/";
+}
+
+void Config::setIndexDirectory(std::string value)
+{
+    indexDirectory = makeIndexPath(value);
+}
+
+void Config::setPipDirectory(std::string value)
+{
+    pipDirectory = makePipPath(value);
+}
+
+void Config::setFaceDirectory(std::string value)
+{
+    faceDirectory = makeFacePath(value);
+}
+
+void Config::setOutputDirectory(std::string value)
+{
+    outputDirectory = makeOutputPath(value);
 }
 
 

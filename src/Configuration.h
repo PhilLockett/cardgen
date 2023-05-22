@@ -55,9 +55,9 @@ private:
         standardPipInfo{_standardPipInfo},
         imagePipInfo{_imagePipInfo},
 
-        indexDirectory{_indexDirectory},
-        pipDirectory{_pipDirectory},
-        faceDirectory{_faceDirectory},
+        indexDirectory{makeIndexPath(_indexDirectory)},
+        pipDirectory{makePipPath(_pipDirectory)},
+        faceDirectory{makeFacePath(_faceDirectory)},
 
         scriptFilename{_scriptFilename},
         refreshFilename{_refreshFilename},
@@ -150,6 +150,15 @@ private:
     int error;
 
     void setName(std::string value) { name = value; }
+    static std::string makeIndexPath(std::string value);
+    static std::string makePipPath(std::string value);
+    static std::string makeFacePath(std::string value);
+    static std::string makeOutputPath(std::string value);
+
+    void setIndexDirectory(std::string value);
+    void setPipDirectory(std::string value);
+    void setFaceDirectory(std::string value);
+    void setOutputDirectory(std::string value);
     void enableDebug(void) { debug = true; }
 
     int version(void) const;

@@ -48,6 +48,11 @@ const info _cornerPipInfo{7.5, 8.07, 20.41};
 const info _standardPipInfo{18.0, 25.7, 18.65};
 const info _imagePipInfo{14.29, 12.63, 9.77};
 
+const std::string _indexBase{"indices"};
+const std::string _pipBase{"pips"};
+const std::string _faceBase{"faces"};
+const std::string _outputBase{"cards"};
+
 const std::string _indexDirectory{"1"};
 const std::string _pipDirectory{"1"};
 const std::string _faceDirectory{"1"};

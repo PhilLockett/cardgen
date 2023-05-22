@@ -100,7 +100,7 @@ static std::string genStartString(void)
 static void genEndString(std::ofstream & file, const std::string & fileName)
 {
     file << "\t+dither -colors 256 \\\n";
-    file << "\tcards/" << Config::getOutputDirectory() << "/" << fileName << ".png\n";
+    file << "\t" << Config::getOutputDirectory() << fileName << ".png\n";
     file << "\n";
 }
 
@@ -310,10 +310,10 @@ static int drawJoker(int fails, std::ofstream & file, int suit)
     file << "# Draw the " << suitNames[suit] << " " << cardNames[0] << " as file " << suits[suit] << cardNames[0] << ".png\n";
 
     const std::string fileName{std::string(suits[suit]) + cardNames[0]};
-    const std::string faceFile{"faces/" + Config::getFaceDirectory() + "/" + fileName + ".png"};
+    const std::string faceFile{Config::getFaceDirectory() + fileName + ".png"};
     const desc faceD{95, 50, 50, faceFile};
 
-    const std::string indexFile{"indices/" + Config::getIndexDirectory() + "/" + fileName + ".png"};
+    const std::string indexFile{Config::getIndexDirectory() + fileName + ".png"};
     const desc indexD{Config::getIndexInfo(), indexFile};
 
     if ((indexD.isFileFound()) || (faceD.isFileFound()))
@@ -390,12 +390,12 @@ int generateScript(int argc, char *argv[])
     file << "#\n";
     file << "\n";
     file << "# Make the directories."  << "\n";
-    file << "mkdir -p cards"  << "\n";
-    file << "mkdir -p cards/" << outputDirectory << "\n";
+    file << "mkdir -p " << _outputBase << "\n";
+    file << "mkdir -p " << outputDirectory.substr(0, outputDirectory.length()-1) << "\n";
 
     file << "\n";
-    file << "# Generate the refresh script."  << "\n";
-    file << "cat <<EOM >cards/" << outputDirectory  << "/" << refreshFilename << "\n";
+    file << "# Generate the refresh script." << "\n";
+    file << "cat <<EOM >" << outputDirectory << refreshFilename << "\n";
     file << "#!/bin/sh\n";
     file << "\n";
     file << "# This file was generated using the following " << argv[0] << " command.\n";
@@ -408,7 +408,7 @@ int generateScript(int argc, char *argv[])
     file << "./" << scriptFilename << "\n";
     file << "EOM\n";
     file << "\n";
-    file << "chmod +x cards/" << outputDirectory	<< "/" << refreshFilename << "\n";
+    file << "chmod +x " << outputDirectory << refreshFilename << "\n";
     file << "\n";
 
 
@@ -427,17 +427,17 @@ int generateScript(int argc, char *argv[])
     {
         const std::string suit{std::string(suits[s])};
 
-        std::string pipFile{std::string("pips/") + pipDirectory + "/" + suit + "S.png"};     // Try small pip file first.
+        std::string pipFile{pipDirectory + suit + "S.png"};     // Try small pip file first.
         desc pipD{cornerPipInfo, pipFile};
         if (!pipD.isFileFound())
         {
             // Small pip file not found, so use standard pip file.
-            pipFile = std::string("pips/") + pipDirectory + "/" + suit + ".png";
+            pipFile = pipDirectory + suit + ".png";
             pipD.setFileName(pipFile);
         }
 
         // Generate the playing cards in the current suit.
-        pipFile = std::string("pips/") + pipDirectory + "/" + suit + ".png";             // Use standard pip file.
+        pipFile = pipDirectory + suit + ".png";             // Use standard pip file.
         desc standardPipD{standardPipInfo, pipFile};
         for (size_t c = 1; c < cards.size(); ++c)
         {
@@ -445,16 +445,16 @@ int generateScript(int argc, char *argv[])
             std::string card{std::string(cards[c])};
             std::string fileName{suit + card};
 
-            std::string indexFile{std::string("indices/") + indexDirectory + "/" + fileName + ".png"};
+            std::string indexFile{indexDirectory + fileName + ".png"};
             desc indexD{indexInfo, indexFile};
             if (!indexD.isFileFound())
             {
                 // indexInfo for suit file not found, so use alternate index file.
-                indexFile = std::string("indices/") + indexDirectory + "/" + std::string(alts[s]) + card + ".png";
+                indexFile = indexDirectory + std::string(alts[s]) + card + ".png";
                 indexD.setFileName(indexFile);
             }
 
-            std::string faceFile{std::string("faces/") + faceDirectory + "/" + fileName + ".png"};
+            std::string faceFile{faceDirectory + fileName + ".png"};
             desc faceD{imageHeight, imageX, imageY, faceFile};
 
             std::string drawFace{};
@@ -517,7 +517,7 @@ int generateScript(int argc, char *argv[])
     for (int s = 0; s < suits.size(); ++s)
         fails += drawJoker(fails, file, s);
 
-    file << "echo Output created in cards/" << outputDirectory << "/\n";
+    file << "echo Output created in " << outputDirectory << "\n";
     file << "\n";
 
     return 0;
