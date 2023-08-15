@@ -210,7 +210,7 @@ static std::string drawImage(const desc & faceD, const std::string & fileName)
     outputString << "\t-draw \"image over " << x << ',' << y << ' ' << w << ',' << h << " '" << faceD.getFileName() << "'\" \\\n";
 
 //- Check if image pips are required.
-    if (Config::getImagePipH())
+    if ((!fileName.empty()) && (Config::getImagePipH()))
     {
         const auto imagePipScale{Config::getImagePipScale()};
         const info & imagePipInfo{Config::getImagePipInfo()};
@@ -466,7 +466,7 @@ int generateScript(int argc, char *argv[])
             }
             else
             {
-                // The face directory does have the needed image file, so use it.
+                // The face directory has the needed image file, so use it.
                 // Note, we only pass the pipfile name for the court cards (c > 10).
                 drawFace = drawImage(faceD, c > 10 ? pipFile : "");
             }
