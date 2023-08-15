@@ -85,9 +85,8 @@ private:
     int getImageSize(void);
     int genDrawString(void);
 
-    std::string DrawString;
-    std::string WardString;
-    bool FileFound;
+    std::string drawString;
+    std::string wardString;
     int imageWidthPx;
     int imageHeightPx;
     float aspectRatio;
@@ -99,14 +98,15 @@ private:
     float portHeightPx;
     float portWidthPx;
 
-    std::string FileName;
+    std::string fileName;
+    bool fileFound;
 
 public:
     desc(float H, float X, float Y, const std::string & FN);
     desc(const info & I, const std::string & FN);
     void reposition(float X, float Y);
     void setFileName(const std::string & fileName);
-    const std::string & getFileName(void) const { return FileName; }
+    const std::string & getFileName(void) const { return fileName; }
 
     float getPortCentreXPx(void) const { return portCentreXPx; }
     float getPortCentreYPx(void) const { return portCentreYPx; }
@@ -118,13 +118,13 @@ public:
     float getAspectRatio(void) const { return aspectRatio; }
     int getPortOriginXPx(void) const { return portOriginXPx; }
     int getPortOriginYPx(void) const { return portOriginYPx; }
-    const std::string & draw(int left = true) const { return left ? DrawString : WardString; }
+    const std::string & draw(int left = true) const { return left ? drawString : wardString; }
 
     float centre2OriginX(float centre) const { return centre - (getPortWidthPx()/2); }
     float centre2OriginY(float centre) const { return centre - (getPortHeightPx()/2); }
 
     bool isLandscape(void) const { return getImageHeightPx() < getImageWidthPx(); }
-    bool isFileFound(void) const { return FileFound; }
+    bool isFileFound(void) const { return fileFound; }
     bool useStandardPips(void) const { return !isFileFound(); }
 
 };

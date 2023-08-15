@@ -69,13 +69,13 @@ bool desc::isValidPNG(const char * const buffer)
  */
 int desc::getImageSize(void)
 {
-    FileFound = false;
+    fileFound = false;
     imageWidthPx = 1;
     imageHeightPx = 1;
     aspectRatio = 1;
 
 //- Open the binary file.
-    std::ifstream file{FileName, std::ifstream::in|std::ifstream::binary};
+    std::ifstream file{fileName, std::ifstream::in|std::ifstream::binary};
 
     if (!file.is_open())
         return 1;
@@ -86,7 +86,7 @@ int desc::getImageSize(void)
     file.read(buffer, 24);
     if ((file) && (isValidPNG(buffer)))
     {
-        FileFound = true;
+        fileFound = true;
         imageWidthPx = htonl(*(uint32_t *)(buffer+16));
         imageHeightPx = htonl(*(uint32_t *)(buffer+20));
         aspectRatio = float(imageWidthPx) / imageHeightPx;
@@ -99,7 +99,7 @@ int desc::getImageSize(void)
 
 
 /**
- * Set up "DrawString"" for drawing the .png file with the correct size and position.
+ * Set up "drawString"" for drawing the .png file with the correct size and position.
  *
  * @return error value or 0 if no errors.
  */
@@ -107,7 +107,7 @@ int desc::getImageSize(void)
 {
     if ((portHeightPx == 0) || (portWidthPx == 0))
     {
-        DrawString = "";	// Don't draw anything here.
+        drawString = "";	// Don't draw anything here.
 
         return 0;
     }
@@ -120,13 +120,13 @@ int desc::getImageSize(void)
     const int y{portOriginYPx + cardBorderPx};
     const int w{ROUND(portWidthPx)};
     const int h{ROUND(portHeightPx)};
-    outputString << "\t-draw \"image over " << x << ',' << y << ' ' << w << ',' << h << " '" << FileName << "'\" \\\n";
-    DrawString = outputString.str();
+    outputString << "\t-draw \"image over " << x << ',' << y << ' ' << w << ',' << h << " '" << fileName << "'\" \\\n";
+    drawString = outputString.str();
 
     outputString.str(std::string());
     x = cardWidthPx - portOriginXPx - w + cardBorderPx;
-    outputString << "\t-draw \"image over " << x << ',' << y << ' ' << w << ',' << h << " '" << FileName << "'\" \\\n";
-    WardString = outputString.str();
+    outputString << "\t-draw \"image over " << x << ',' << y << ' ' << w << ',' << h << " '" << fileName << "'\" \\\n";
+    wardString = outputString.str();
 
     return 0;
 }
@@ -142,7 +142,7 @@ int desc::getImageSize(void)
  * @return true if valid, false otherwise.
  */
 desc::desc(float H, float X, float Y, const std::string & fileName)
-: FileName(fileName), FileFound(false)
+: fileName(fileName), fileFound(false)
 {
     const auto cardHeightPx{Config::getCardHeightPx()};
     const auto cardWidthPx{Config::getCardWidthPx()};
@@ -166,7 +166,7 @@ desc::desc(float H, float X, float Y, const std::string & fileName)
  * @return true if valid, false otherwise.
  */
 desc::desc(const info & I, const std::string & fileName)
-: FileName(fileName), FileFound(false)
+: fileName(fileName), fileFound(false)
 {
     const auto cardHeightPx{Config::getCardHeightPx()};
     const auto cardWidthPx{Config::getCardWidthPx()};
@@ -204,11 +204,11 @@ void desc::reposition(float X, float Y)
 /**
  * Change image file image and adjust internal values.
  *
- * @param  fileName - Name of new image file.
+ * @param  imageFile - Name of new image file.
  */
-void desc::setFileName(const std::string & fileName)
+void desc::setFileName(const std::string & imageFile)
 {
-    FileName = fileName;
+    fileName = imageFile;
     getImageSize();
     portWidthPx   = portHeightPx * aspectRatio;
     portOriginXPx = ROUND(centre2OriginX(portCentreXPx));
