@@ -3,6 +3,8 @@
 'cardgen' is a command-line utility that generates images representing playing 
 cards.
 
+**USE AT OWN RISK.**
+
 ## Overview
 
 'cardgen' generates a shell script that makes multiple calls to the 
